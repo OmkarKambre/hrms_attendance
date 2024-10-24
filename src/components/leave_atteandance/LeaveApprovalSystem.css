@@ -1,0 +1,19 @@
+.leave-approval-system {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .leave-cards {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  

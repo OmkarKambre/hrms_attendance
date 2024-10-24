@@ -1,0 +1,287 @@
+.dashboard-container {
+  flex-grow: 1;
+  padding: 24px;
+  background-color: #ffffff; /* Change to white */
+  min-height: 100vh; 
+  margin: 0; 
+}
+
+.dashboard-container .dashboard-title {
+  margin-bottom: 40px; 
+  color: white;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.grid-item {
+  flex-basis: calc(25% - 18px);
+  max-width: calc(25% - 18px);
+}
+
+.grid-item.wide {
+  flex-basis: calc(33.333% - 16px);
+  max-width: calc(33.333% - 16px);
+}
+
+.grid-item.full-width {
+  flex-basis: 100%;
+  max-width: 100%;
+}
+
+.grid-item.half-width {
+  flex-basis: calc(50% - 12px);
+  max-width: calc(50% - 12px);
+}
+
+.card {
+  height: 100%;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card-content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.card-title {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.card-value {
+  font-size: 32px;
+  font-weight: bold;
+  color: #333;
+}
+
+.chart-container {
+  height: 300px;
+}
+
+.chart-container.large {
+  height: 400px;
+}
+
+.chart-container.medium {
+  height: 350px;
+}
+
+
+@media (max-width: 1400px) {
+  .grid-item, .grid-item.wide {
+    flex-basis: calc(50% - 12px);
+    max-width: calc(50% - 12px);
+  }
+  .grid-item.full-width {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .grid-item.half-width {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  .grid-item, .grid-item.wide, .grid-item.half-width {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+}
+
+
+.recharts-wrapper {
+  margin: 0 auto;
+}
+
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: #ffffff; /* Change to white */
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.filters-container {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.filter {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+
+.filter.MuiTextField-root {
+  min-width: 200px;
+  background-color: white;
+}
+
+
+.filter:last-child {
+  margin-bottom: 0;
+}
+
+
+.grid-item:first-child .card {
+  height: 100%; /* Change from 'auto' to '100%' */
+}
+
+.grid-item:first-child .card-content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Change from 'flex-start' to 'space-between' */
+  height: 100%; /* Change from 'auto' to '100%' */
+}
+
+.grid-item:first-child .filter {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.grid-item:first-child .filter:last-child {
+  margin-bottom: 0;
+}
+
+
+.grid-item:not(:first-child) .card {
+  height: 100%;
+}
+
+.grid-item:not(:first-child) .card-content {
+  justify-content: center;
+  height: 100%;
+}
+
+
+
+@media (max-width: 768px) {
+  .grid-container {
+    gap: 16px;
+  }
+
+  .grid-item,
+  .grid-item.wide,
+  .grid-item.half-width {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+
+  .card-title {
+    font-size: 14px;
+  }
+
+  .card-value {
+    font-size: 28px;
+  }
+
+  .chart-container {
+    height: 250px;
+  }
+
+  .chart-container.large,
+  .chart-container.medium {
+    height: 300px;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: 16px;
+  }
+
+  .dashboard-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .grid-container {
+    gap: 12px;
+  }
+
+  .card-content {
+    padding: 12px;
+  }
+
+  .card-title {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .card-value {
+    font-size: 24px;
+  }
+
+  .chart-container,
+  .chart-container.large,
+  .chart-container.medium {
+    height: 200px;
+  }
+
+ 
+  .filter {
+    margin-bottom: 12px;
+  }
+
+  .MuiSelect-select {
+    padding: 8px 12px;
+  }
+}
+
+
+.filter-card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.filter-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filter-card-content .card-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.filter-card-content .filter {
+  width: 100%;
+}
+
+
+
+.sidebar {
+  background-color: #ffffff; /* Change to white */
+  /* Other styles */
+}

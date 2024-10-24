@@ -1,0 +1,242 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background: #f5f5f5; /* Light background color */
+    margin: 0;
+    padding: 0;
+}
+
+/* Container for the employee list */
+.employee-list-container {
+    max-width: 1200px; /* Limit the width for better readability */
+    margin: 20px auto; /* Center the container */
+    padding: 20px;
+    background-color: #ffffff; /* White background for the list */
+    border-radius: 12px; /* Slightly more rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Softer shadow for depth */
+}
+
+/* Header styles */
+.header {
+    background-color: #4caf50; /* Header background color */
+    padding: 20px; /* Padding around the header */
+    border-radius: 12px; /* Rounded corners for the header */
+    margin-bottom: 20px; /* Space below the header */
+    text-align: center; /* Center the title */
+}
+
+.employee-list-title {
+    font-size: 28px; /* Larger font for the title */
+    color: white; /* White text for contrast */
+    margin: 0; /* Remove default margin */
+    font-weight: bold; /* Bold title */
+}
+
+/* Search container styles */
+.search-container {
+    display: flex; /* Use flexbox */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    margin-bottom: 20px; /* Space below the search input */
+}
+
+/* Search input container styles */
+.search-input-container {
+    position: relative; /* Position relative for absolute positioning of the icon */
+    max-width: 300px; /* Set a smaller maximum width for the search input */
+    width: 100%; /* Full width of the container */
+}
+
+/* Search input styles */
+.search-input {
+    padding: 12px 20px; /* Increased padding for a more spacious feel */
+    width: 100%; /* Full width of the container */
+    max-width: 400px; /* Set a maximum width for larger screens */
+    border: 2px solid #ccc; /* Light gray border */
+    border-radius: 25px; /* More rounded corners */
+    font-size: 16px; /* Font size for input text */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for border color and shadow */
+    background-color: #ffffff; /* White background color for the input */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+.search-input:focus {
+    outline: none; /* Remove default outline */
+    border-color: #6a5acd; /* Change border color on focus */
+    box-shadow: 0 0 5px rgba(106, 92, 205, 0.5); /* Subtle shadow on focus */
+}
+
+.search-input::placeholder {
+    color: #888; /* Placeholder text color */
+}
+
+/* Employee item styles */
+.employee-item {
+    display: flex; /* Flexbox for alignment */
+    align-items: center; /* Center items vertically */
+    padding: 15px; /* Padding for each item */
+    border-bottom: 1px solid #e0e0e0; /* Light border for separation */
+    transition: background-color 0.3s, transform 0.3s; /* Added transform transition */
+}
+
+.employee-item:hover {
+    background-color: #f1f8e9; /* Light green hover effect */
+    transform: scale(1.01); /* Slightly enlarge on hover */
+}
+
+/* Employee details styles */
+.employee-details {
+    display: flex; /* Use flexbox for details */
+    justify-content: space-between; /* Space between details and button */
+    width: 100%; /* Full width to allow spacing */
+    align-items: center; /* Center items vertically */
+}
+
+/* Employee info styles */
+.employee-info {
+    display: flex; /* Flexbox for employee info */
+    flex-direction: column; /* Stack items vertically */
+    flex-grow: 1; /* Allow details to take up remaining space */
+    margin-left: 15px; /* Increased space between images and text */
+}
+
+/* Employee name styles */
+.employee-name {
+    font-size: 20px; /* Increased font size for names */
+    color: #2e7d32; /* Darker green text */
+    font-weight: bold; /* Bold names */
+}
+
+/* Employee role styles */
+.employee-role {
+    font-size: 16px; /* Increased font size for roles */
+    color: #388e3c; /* Medium green color for roles */
+}
+
+/* Button styles */
+.button {
+    padding: 10px 15px; /* Padding for the button */
+    background-color: #4caf50; /* Button background color */
+    color: white; /* Button text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s, transform 0.3s; /* Transition effects */
+    font-size: 16px; /* Font size for button text */
+    font-weight: bold; /* Bold text for button */
+    margin-left: auto; /* Push the button to the right */
+}
+
+.button:hover {
+    background-color: #388e3c; /* Darker green background on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .employee-list-container {
+        padding: 10px; /* Less padding on smaller screens */
+    }
+
+    .employee-item {
+        flex-direction: column; /* Stack items vertically */
+        align-items: flex-start; /* Align items to the start */
+    }
+
+    .search-input {
+        width: 90%; /* Adjust width for smaller screens */
+    }
+}
+
+/* Employee photo styles */
+.employee-photo {
+    width: 80px; /* Adjusted size for employee photo */
+    height: 80px; /* Adjusted size for employee photo */
+    border-radius: 50%; /* Optional: make the photo circular */
+    border: 2px solid #4caf50; /* Added border for a polished look */
+}
+
+/* Suggestions list styles */
+.suggestions-list {
+    list-style-type: none; /* Remove default list styling */
+    padding: 0; /* Remove padding */
+    margin: 5px 0 0 0; /* Margin above the list */
+    border: 1px solid #ccc; /* Light gray border for the suggestions */
+    border-radius: 5px; /* Rounded corners */
+    background-color: #ffffff; /* White background for the suggestions */
+    width: 100%; /* Match the width of the search input */
+    position: absolute; /* Position it below the input */
+    z-index: 1000; /* Ensure it appears above other elements */
+    left: 0; /* Align to the left of the search input */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+.suggestions-list li {
+    padding: 12px 15px; /* Increased padding for each suggestion */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effects */
+    font-size: 16px; /* Font size for suggestions */
+    color: #333; /* Dark text color for better readability */
+}
+
+.suggestions-list li:hover {
+    background-color: #f0f0f0; /* Light gray background on hover */
+    color: #6a5acd; /* Change text color on hover */
+    font-weight: bold; /* Bold text on hover */
+}
+
+/* Clear button styles */
+.clear-button {
+    position: absolute; /* Position it inside the search input container */
+    right: 10px; /* Position it to the right */
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Adjust for vertical centering */
+    background: none; /* No background */
+    border: none; /* No border */
+    color: #888; /* Color for the cross */
+    font-size: 20px; /* Font size for the cross */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: color 0.3s; /* Smooth transition for color */
+}
+
+.clear-button:hover {
+    color: #6a5acd; /* Change color on hover */
+}
+
+/* Custom styles for react-select */
+.react-select__control {
+    background: linear-gradient(135deg, #f0f0f0, #ffffff); /* Gradient background */
+    border: 2px solid #6a5acd; /* Border color */
+    border-radius: 25px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition */
+    min-height: 40px; /* Set a minimum height for the control */
+}
+
+.react-select__control:hover {
+    border-color: #4caf50; /* Change border color on hover */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Slightly increase shadow on hover */
+}
+
+.react-select__placeholder {
+    color: #888; /* Lighter color for placeholder text */
+}
+
+.react-select__option {
+    padding: 10px 15px; /* Padding for each option */
+    transition: background-color 0.3s; /* Smooth transition for hover effects */
+}
+
+.react-select__option:hover {
+    background-color: #e0f7e9; /* Light green background on hover */
+    color: #2e7d32; /* Darker green text on hover */
+}
+
+.react-select__clear-indicator {
+    color: #6a5acd; /* Color for the clear button */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+
+.react-select__clear-indicator:hover {
+    color: #4caf50; /* Change color on hover */
+}

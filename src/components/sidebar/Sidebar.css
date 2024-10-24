@@ -1,0 +1,89 @@
+.sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+  transition: width 0.3s ease; /* Smooth transition for width */
+}
+
+.sidebar-minimized {
+  width: 80px; /* Width when minimized */
+}
+
+.sidebar .MuiDrawer-paper {
+  width: 280px;
+  box-sizing: border-box;
+}
+
+.sidebar-minimized .MuiDrawer-paper {
+  width: 80px; /* Width when minimized */
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+.company-logo {
+  width: 90%;
+  max-width: 220px;
+  height: auto;
+}
+
+.menu-item {
+  transition: background-color 0.3s ease;
+}
+
+.menu-item:hover {
+  background-color: rgba(0, 128, 0, 0.1); /* Light green background on hover */
+}
+
+.menu-item.active > .MuiListItemText-root .MuiListItemText-primary {
+  color: #008000; /* Green color for text of active items */
+  font-weight: bold; /* Optional: make active text bold */
+}
+
+.menu-item.active > .MuiListItemIcon-root {
+  color: #008000; /* Green color for icons of active items */
+}
+
+/* Remove the subheading styles */
+
+.mobile-menu-button {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1400; /* Increase this value to ensure it's above other content */
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 0 0 4px 0; /* Rounded bottom-right corner */
+  padding: 12px;
+  margin: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.minimize-button {
+  margin: 8px; /* Add some margin for the minimize button */
+}
+
+@media (max-width: 768px) {
+  .sidebar,
+  .sidebar .MuiDrawer-paper {
+    width: 240px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar,
+  .sidebar .MuiDrawer-paper {
+    width: 200px;
+  }
+}
+
+/* Add styles for the close button */
+.close-button {
+  margin: 8px; /* Add some margin for the close button */
+  color: #000; /* Change color as needed */
+}

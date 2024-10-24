@@ -1,0 +1,118 @@
+* {
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1e1e1e; /* Dark background to match the page theme */
+    padding: 15px 30px; /* Increased padding for a more spacious feel */
+    color: #e0e0e0; /* Light text color for readability */
+    width: 100%; /* Full viewport width */
+    position: fixed; /* Fix the navbar at the top */
+    top: 0; /* Align to the top */
+    left: 0; /* Align to the left */
+    z-index: 1000; /* Ensure it stays above other content */
+    margin: 0; /* Remove any default margin */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Enhanced shadow for depth */
+    transition: background-color 0.3s ease; /* Smooth transition for background color */
+}
+
+.navbar:hover {
+    background-color: #2a2a2a; /* Slightly lighter background on hover */
+}
+
+.navbar-title {
+    font-size: 1.8rem; /* Slightly larger font size for emphasis */
+    font-weight: bold;
+    color: #bb86fc; /* Purple accent color for the title */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #e0e0e0;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.navbar-links {
+    display: flex;
+    gap: 25px; /* Increased space between links */
+}
+
+.navbar-link,
+.logout-button { /* Combine styles for links and logout button */
+    color: #e0e0e0; /* Light color for links and button */
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s, transform 0.3s; /* Smooth transition for hover effect */
+    position: relative;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Ensure consistent font */
+}
+
+.navbar-link::after,
+.logout-button::after { /* Add underline effect to logout button */
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: #bb86fc; /* Purple underline */
+    transition: width 0.3s;
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+}
+
+.navbar-link:hover,
+.logout-button:hover {
+    color: #bb86fc; /* Purple color on hover for links and button */
+    transform: translateY(-2px); /* Slight lift on hover */
+}
+
+.navbar-link:hover::after,
+.logout-button:hover::after {
+    width: 100%; /* Full underline on hover */
+}
+
+/* Highlight active link */
+.navbar-link.active {
+    color: #bb86fc; /* Purple color for active link */
+    font-weight: bold; /* Bold font for active link */
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column; /* Stack items vertically */
+        align-items: flex-start; /* Align items to the start */
+        padding: 10px 20px; /* Adjust padding for mobile */
+    }
+
+    .menu-toggle {
+        display: block; /* Show the toggle button on mobile */
+    }
+
+    .navbar-links {
+        flex-direction: column; /* Stack links vertically */
+        gap: 15px; /* Adjust gap between links */
+        width: 100%; /* Full width for links */
+        display: none; /* Hide links by default */
+    }
+
+    .navbar-links.open {
+        display: flex; /* Show links when menu is open */
+    }
+
+    .navbar-link,
+    .logout-button {
+        width: 100%; /* Full width for links and button */
+        text-align: left; /* Align text to the left */
+    }
+}

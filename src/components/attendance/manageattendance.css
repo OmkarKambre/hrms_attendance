@@ -1,0 +1,337 @@
+:root {
+  --primary-color: #4CAF50;
+  --primary-dark: #45a049;
+  --primary-light: #81C784;
+  --primary-lighter: #E8F5E9;
+  --text-color: #333333;
+  --background-color: #f5f5f5;
+  --card-background: #ffffff;
+}
+
+.attendance-dashboard {
+  min-height: 100vh;
+  background-color: var(--background-color);
+  padding: 2rem;
+  width: 100%;
+  max-width: none;
+}
+
+.attendance-dashboard__header {
+  background-color: var(--card-background);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.attendance-dashboard__title {
+  display: flex;
+  align-items: center;
+  color: black;
+  font-weight: 600;
+  gap: 1rem;
+}
+
+.attendance-dashboard__icon {
+  color: var(--primary-color);
+  font-size: 2rem !important;
+}
+
+.attendance-dashboard__date-time {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.attendance-dashboard__current-time {
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.attendance-dashboard__date-picker {
+  width: 180px;
+}
+
+.attendance-dashboard__calendar-icon {
+  color: var(--primary-color);
+}
+
+.attendance-dashboard__summary {
+  margin-bottom: 2rem;
+}
+
+.attendance-dashboard__summary .MuiCard-root,
+.attendance-dashboard__alerts,
+.attendance-dashboard__adjustments,
+.attendance-dashboard__edit-dialog .MuiDialog-paper {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.attendance-dashboard__summary .MuiCardHeader-root,
+.attendance-dashboard__alerts .MuiCardHeader-root,
+.attendance-dashboard__adjustments .MuiCardHeader-root,
+.attendance-dashboard__edit-dialog-title {
+  background-color: var(--primary-color);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  color: white;
+}
+
+.attendance-dashboard__summary .MuiCardHeader-title,
+.attendance-dashboard__alerts .MuiCardHeader-title,
+.attendance-dashboard__adjustments .MuiCardHeader-title,
+.attendance-dashboard__edit-dialog-title {
+  color: white !important;
+}
+
+.attendance-dashboard__summary .MuiCardHeader-avatar,
+.attendance-dashboard__alerts .MuiCardHeader-avatar,
+.attendance-dashboard__adjustments .MuiCardHeader-avatar {
+  color: white;
+}
+
+.attendance-dashboard__summary .MuiCardContent-root,
+.attendance-dashboard__alerts .MuiCardContent-root,
+.attendance-dashboard__adjustments .MuiCardContent-root,
+.attendance-dashboard__edit-dialog-content {
+  padding: 24px;
+}
+
+.attendance-dashboard__summary .MuiTypography-h4 {
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--primary-color);
+}
+
+.attendance-dashboard__content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.attendance-dashboard__employee-list {
+  flex: 1 1 100%;
+  min-width: 0;
+}
+
+.attendance-dashboard__employee-table {
+  width: 100%;
+  overflow-x: auto;
+  background-color: var(--card-background);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.attendance-dashboard__employee-table .MuiTable-root {
+  min-width: 650px;
+}
+
+/* Add this new rule to make the table full width */
+.attendance-dashboard__employee-table .MuiTableContainer-root {
+  width: 100%;
+}
+
+/* Update these rules to style the table header */
+.attendance-dashboard__table-head {
+  background-color: var(--primary-color) !important;
+}
+
+.attendance-dashboard__table-head .MuiTableCell-head {
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+/* Remove the background color from odd rows */
+.attendance-dashboard__employee-table .MuiTableBody-root .MuiTableRow-root:nth-of-type(odd) {
+  background-color: transparent;
+}
+
+.attendance-dashboard__employee-table .MuiTableBody-root .MuiTableCell-body {
+  color: var(--text-color);
+}
+
+/* Update chip colors */
+.MuiChip-root.MuiChip-filled.MuiChip-colorPrimary {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+.MuiChip-root.MuiChip-filled.MuiChip-colorWarning {
+  background-color: #FFA726 !important;
+  color: white !important;
+}
+
+.MuiChip-root.MuiChip-filled.MuiChip-colorError {
+  background-color: #EF5350 !important;
+  color: white !important;
+}
+
+.attendance-dashboard__sidebar {
+  flex: 1 1 300px;
+  max-width: 100%;
+}
+
+.attendance-dashboard__alerts,
+.attendance-dashboard__adjustments {
+  height: 100%;
+  margin-bottom: 24px;
+  background-color: var(--card-background);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.attendance-dashboard__edit-dialog .MuiDialog-paper {
+  width: 100%;
+  max-width: 600px;
+  overflow-y: visible;
+}
+
+.attendance-dashboard__edit-dialog-title {
+  padding: 16px 24px;
+  color: var(--primary-color);
+}
+
+.attendance-dashboard__edit-dialog-content {
+  padding: 24px;
+}
+
+.attendance-dashboard__edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.attendance-dashboard__edit-form .MuiTextField-root,
+.attendance-dashboard__edit-form .MuiSelect-root,
+.attendance-dashboard__edit-form .MuiTextareaAutosize-root {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.attendance-dashboard__edit-form .MuiButton-root {
+  margin-top: 16px;
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.attendance-dashboard__edit-form .MuiButton-root:hover {
+  background-color: var(--primary-dark);
+}
+
+@media (max-width: 1200px) {
+  .attendance-dashboard__content {
+    flex-direction: column;
+  }
+
+  .attendance-dashboard__sidebar {
+    order: -1;
+  }
+
+  .attendance-dashboard__employee-list {
+    margin-right: 0;
+    margin-bottom: 24px;
+  }
+
+  .attendance-dashboard__sidebar {
+    max-width: none;
+  }
+
+  /* Add this new rule to ensure full width on smaller screens */
+  .attendance-dashboard__employee-table {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .attendance-dashboard {
+    padding: 1rem;
+  }
+
+  .MuiContainer-root.attendance-dashboard {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .attendance-dashboard__header {
+    padding: 1rem 1.5rem;
+  }
+
+  .attendance-dashboard__content {
+    gap: 1rem;
+  }
+
+  .attendance-dashboard__summary {
+    margin-bottom: 1rem;
+  }
+
+  .attendance-dashboard__edit-dialog-content {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .attendance-dashboard {
+    padding: 0.5rem;
+  }
+
+  .MuiContainer-root.attendance-dashboard {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .attendance-dashboard__header {
+    padding: 0.75rem 1rem;
+    flex-direction: column;
+  }
+
+  .attendance-dashboard__date-time {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .attendance-dashboard__date-picker {
+    width: 100%;
+  }
+
+  .attendance-dashboard__summary {
+    margin-bottom: 24px;
+  }
+
+  .attendance-dashboard__edit-dialog-content {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 960px) {
+  .attendance-dashboard__alerts,
+  .attendance-dashboard__adjustments {
+    margin-bottom: 2rem;
+  }
+}
+
+.attendance-dashboard__employee-table .MuiTableHead-root {
+  background-color: var(--primary-color);
+}
+
+.attendance-dashboard__employee-table .MuiTableHead-root .MuiTableCell-head {
+  color: white;
+  font-weight: 600;
+}
+
+.employee-select {
+  width: 300px;
+}
+
+@media (max-width: 768px) {
+  .employee-select {
+    width: 100%;
+  }
+}

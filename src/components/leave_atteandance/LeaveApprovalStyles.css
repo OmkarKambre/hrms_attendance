@@ -1,0 +1,342 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;600;700&display=swap');
+
+/* Global styles */
+body {
+  font-family: 'Open Sans', sans-serif;
+  color: #333;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+}
+
+/* LeaveRequestTable styles */
+.leave-request-table {
+  width: 100%;
+  overflow-x: auto;
+  font-size: 0.9rem;
+}
+.leave-request-table table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 2px solid #28a745; /* Green border around the entire table */
+  border-radius: 8px;
+  overflow: hidden;
+}
+.leave-request-table th, .leave-request-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid #ddd; /* Light gray border for cells */
+}
+.leave-request-table th {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  background-color: #28a745; /* Green header */
+  color: white;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #218838; /* Darker green border for header bottom */
+}
+.leave-request-table tr:nth-child(even) {
+  background-color: #f2f2f2; /* Light gray for even rows */
+}
+.leave-request-table tr:nth-child(odd) {
+  background-color: #ffffff; /* White for odd rows */
+}
+.leave-request-table tr:hover {
+  background-color: #e6e6e6; /* Slightly darker gray on hover */
+  transition: background-color 0.3s ease;
+}
+.leave-request-table button {
+  margin-right: 15px; /* or 20px for an even larger gap */
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+}
+.leave-request-table .view-button {
+  background-color: #28a745;
+  color: white;
+}
+.leave-request-table .view-button:hover {
+  background-color: #218838;
+}
+.leave-request-table .delete-button {
+  background-color: #dc3545;
+  color: white;
+  padding: 6px;
+}
+.leave-request-table .delete-button:hover {
+  background-color: #c82333;
+}
+.leave-request-table .delete-button svg {
+  vertical-align: middle;
+  fill: currentColor; /* This ensures the SVG icon is white */
+}
+
+/* New style to remove right margin from the last button */
+.leave-request-table td:last-child button:last-child {
+  margin-right: 0;
+}
+
+/* LeaveRequestCard styles */
+.leave-request-card {
+  flex: 1;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  margin: 0 10px;
+}
+.leave-request-card.blue { background-color: #e3f2fd; }
+.leave-request-card.green { background-color: #e8f5e9; }
+.leave-request-card.red { background-color: #ffebee; }
+.leave-request-card.yellow { background-color: #fff9c4; } /* New style for pending card */
+.leave-request-card h3 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+.leave-request-card p {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Badge styles */
+.badge {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+}
+.badge-success {
+  background-color: #c8e6c9;
+  color: black;
+}
+.badge-danger {
+  background-color: #ffcdd2;
+  color: black;
+}
+.badge-default {
+  background-color: #fff9c4; /* Light yellow background */
+  color: #000000; /* Black text for pending status */
+}
+
+/* LeaveRequestModal styles */
+.leave-request-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5); /* Adjust the opacity as needed */
+  z-index: 1000;
+}
+.modal-content {
+  background-color: #fff;
+  border-radius: 8px;
+  /* Remove the box-shadow */
+  width: 500px;
+  max-width: 90%;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+.modal-header {
+  background-color: #f8f9fa;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e9ecef;
+}
+.modal-header h2 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333;
+}
+.close-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6c757d;
+}
+.modal-body {
+  padding: 20px;
+}
+.info-row {
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.info-label {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #495057;
+  min-width: 120px;
+}
+.info-value {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 1rem;
+  color: #212529;
+  flex: 1;
+}
+.description-row {
+  flex-direction: column;
+  align-items: stretch;
+}
+.description-container {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 15px;
+  margin-top: 10px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.description-text {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.5;
+  color: #333;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.status-pending {
+  color: #e6d97e; /* Black text for pending status in modal */
+  font-weight: bold;
+}
+.status-approved {
+  color:  #218838;
+  font-weight: bold;
+}
+.status-rejected {
+  color: #dc3545;
+  font-weight: bold;
+}
+.modal-footer {
+  padding: 15px 20px;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+}
+.approve {
+  background-color: #28a745;
+  color: white;
+}
+.approve:hover {
+  background-color: #218838;
+}
+.reject {
+  background-color: #dc3545;
+  color: white;
+}
+.reject:hover {
+  background-color: #c82333;
+}
+
+/* LeaveApprovalSystem styles */
+.leave-approval-system {
+  padding: 20px;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.header h1 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+.leave-cards {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+/* FilterSelect styles */
+.filter-select-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.filter-select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 10px 35px 10px 15px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  background-color: #ffffff; /* Changed to white */
+  border: 2px solid #ddd;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.9rem;
+}
+
+.filter-select:hover {
+  border-color: #bbb;
+}
+
+.filter-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.filter-select-wrapper::after {
+  content: '\25BC';
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 12px;
+  color: #666;
+}
+
+/* Styling for options */
+.filter-select option {
+  background-color: #fff;
+  color: #333;
+  padding: 10px;
+}

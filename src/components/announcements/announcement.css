@@ -1,0 +1,270 @@
+:root {
+  --primary-color: #4CAF50;
+  --primary-dark: #45a049;
+  --primary-light: #81C784;
+  --primary-lighter: #E8F5E9;
+  --text-color: #333333;
+  --background-color: #f5f5f5;
+  --card-background: #ffffff;
+}
+
+.announcement-page {
+  min-height: 100vh;
+  background-color: var(--background-color);
+  padding: 2rem;
+}
+
+.announcement-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.announcement-header {
+  background-color: var(--card-background);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+}
+
+.announcement-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.announcement-card {
+  background-color: var(--card-background);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.announcement-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.card-title {
+  margin-bottom: 0.5rem !important;
+  color: var(--primary-color);
+}
+
+.announcement-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.announcement-input, .recipient-selection, .employee-select {
+  margin-bottom: 1.5rem !important;
+}
+
+.send-button {
+  align-self: flex-start;
+  background-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+.send-button:hover {
+  background-color: var(--primary-dark) !important;
+}
+
+.announcement-table-container {
+  width: 100%;
+  margin-bottom: 1rem;
+  overflow-x: auto; /* Add horizontal scroll for small screens */
+}
+
+.announcement-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  min-width: 600px; /* Ensure minimum width to prevent wrapping */
+}
+
+.announcement-table th {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.announcement-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  white-space: nowrap; /* Prevent text wrapping */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+}
+
+.announcement-table td:nth-child(2) {
+  max-width: 300px; /* Limit width of announcement text column */
+  white-space: normal; /* Allow wrapping for announcement text */
+}
+
+.announcement-table tr:last-child td {
+  border-bottom: none;
+}
+
+.recipient-selection .MuiRadio-root.Mui-checked {
+  color: var(--primary-color);
+}
+
+.announcement-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline,
+.employee-select .react-select__control--is-focused {
+  border-color: var(--primary-color) !important;
+}
+
+.announcement-input .MuiInputLabel-root.Mui-focused {
+  color: var(--primary-color) !important;
+}
+
+.employee-select .react-select__option--is-focused {
+  background-color: var(--primary-lighter);
+}
+
+.employee-select .react-select__option--is-selected {
+  background-color: var(--primary-color);
+}
+
+.employee-select .react-select__multi-value {
+  background-color: var(--primary-lighter);
+}
+
+.employee-select .react-select__multi-value__label {
+  color: var(--primary-dark);
+}
+
+.employee-select .react-select__multi-value__remove:hover {
+  background-color: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+@media (max-width: 767px) {
+  .announcement-page {
+    padding: 1rem;
+  }
+
+  .announcement-header {
+    padding: 1rem 1.5rem;
+  }
+
+  .announcement-content {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .announcement-page {
+    padding: 1rem;
+  }
+
+  .announcement-header {
+    padding: 1rem 1.5rem;
+  }
+
+  .announcement-content {
+    gap: 1rem;
+  }
+
+  .card-title {
+    font-size: 1.25rem !important;
+  }
+
+  .announcement-form {
+    gap: 1rem;
+  }
+
+  .send-button {
+    width: 100%;
+  }
+
+  .announcement-table-container {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding: 0 1rem;
+    overflow-x: auto; /* Ensure horizontal scroll on small screens */
+  }
+
+  .announcement-table {
+    min-width: 600px; /* Maintain minimum width on small screens */
+  }
+
+  .announcement-table th,
+  .announcement-table td {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .announcement-page {
+    padding: 0.5rem;
+  }
+
+  .announcement-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .announcement-card {
+    padding: 0.75rem;
+  }
+
+  .card-title {
+    font-size: 1.1rem !important;
+  }
+
+  .announcement-input {
+    margin-bottom: 1rem !important;
+  }
+
+  .recipient-selection {
+    margin-bottom: 1rem !important;
+  }
+
+  .employee-select {
+    margin-bottom: 1rem !important;
+  }
+
+  .announcement-table th,
+  .announcement-table td {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .announcement-table-container {
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
+    padding: 0 0.75rem;
+  }
+}
+
+.announcement-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.announcement-icon {
+  color: var(--primary-color);
+  font-size: 2rem !important;
+}
+
+.delete-button {
+  background-color: #f44336 !important;
+  color: white !important;
+  padding: 6px !important;
+  min-width: 0 !important;
+}
+
+.delete-button:hover {
+  background-color: #d32f2f !important;
+}
+
+.announcement-table td:last-child {
+  width: 1%;
+  white-space: nowrap;
+}

@@ -1,0 +1,132 @@
+.apply-leave-page .apply-leave-container {
+    max-width: 600px;
+    width: 100%;
+    margin: 65px 0 20px 160px; /* Adjusted left margin to shift container */
+    padding: 20px;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+}
+
+.apply-leave-page .apply-leave-container h2 {
+    text-align: center;
+    color: #bb86fc;
+    margin-bottom: 20px;
+}
+
+.apply-leave-page .apply-leave-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.apply-leave-page .form-group {
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.apply-leave-page .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.apply-leave-page .form-group input,
+.apply-leave-page .form-group select,
+.apply-leave-page .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+}
+
+.apply-leave-page .form-group textarea {
+    resize: vertical;
+    height: 100px;
+}
+
+.apply-leave-page .submit-button {
+    padding: 10px 20px;
+    background-color: #bb86fc;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.apply-leave-page .submit-button:hover {
+    background-color: #9a6fdc;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .apply-leave-page .apply-leave-container {
+        margin: 140px auto 2px auto; /* Adjust bottom margin for mobile */
+        padding: 15px; /* Reduce padding for mobile */
+    }
+
+    .apply-leave-page .form-group input,
+    .apply-leave-page .form-group select,
+    .apply-leave-page .form-group textarea {
+        padding: 8px; /* Reduce padding for inputs on mobile */
+    }
+
+    .apply-leave-page .submit-button {
+        padding: 8px 16px; /* Adjust button padding for mobile */
+    }
+}
+
+.apply-leave-page .form-group.dates {
+    display: flex;
+    justify-content: space-between;
+}
+
+.apply-leave-page .form-group.dates .form-group {
+    flex: 1;
+    margin-right: 10px; /* Add some space between the two inputs */
+}
+
+.apply-leave-page .form-group.dates .form-group:last-child {
+    margin-right: 0; /* Remove margin from the last child */
+}
+
+.apply-leave-page .pending-leaves {
+    text-align: center;
+    margin-bottom: 20px;
+    background-color: #333;
+    padding: 15px;
+    border-radius: 8px;
+    color: #bb86fc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.apply-leave-page .pending-leaves p {
+    margin: 0;
+    font-size: 1.2em;
+    color: #e0e0e0;
+}
+
+.apply-leave-page .pending-leaves span {
+    display: block;
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #bb86fc;
+}
+
+.warning {
+    color: #bb86fc; /* Match the theme color */
+    text-align: center;
+    margin-bottom: 15px;
+    font-weight: bold;
+    background-color: #2c2c2c; /* Dark background to match theme */
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
