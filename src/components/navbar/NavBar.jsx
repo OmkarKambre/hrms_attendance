@@ -35,6 +35,19 @@ const NavBar = ({ onLogout }) => {
         >
           Leave History
         </Link>
+        <Link
+          to="/AttendanceHistory" // New link for Attendance History
+          className={`navbar-link ${location.pathname === '/AttendanceHistory' ? 'active' : ''}`}
+        >
+          Attendance History
+        </Link>
+        <Link
+          to="/MarkAttendance" // New link for Mark Attendance
+          className={`navbar-link ${location.pathname === '/MarkAttendance' ? 'active' : ''}`}
+        >
+          Mark Attendance
+        </Link>
+        
         <span className="navbar-link logout-text" onClick={onLogout}>Logout</span>
       </div>
     </nav>

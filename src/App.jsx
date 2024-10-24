@@ -12,7 +12,9 @@ import EmployeeList from './components/employee_list/employee_list';
 import ManageAttendance from './components/attendance/manageattendance';
 import EmployeeDetails from './components/employee_details/EmployeeDetails';
 import ApplyLeave from './components/apply_leave/ApplyLeave';
-import LeaveHistory from './components/leave_history/LeaveHistory'; // Import LeaveHistory
+import LeaveHistory from './components/leave_history/LeaveHistory';
+import MarkAttendance from './components/mark_attendance/MarkAttendance';
+import AttendanceHistory from './components/attendance_history/AttendanceHistory';
 import './App.css';
 
 function App() {
@@ -66,7 +68,7 @@ function App() {
     return <div>Loading...</div>;
   }
 
-  const employeePortalRoutes = ['/EmployeeDetails', '/ApplyLeave', '/LeaveHistory'];
+  const employeePortalRoutes = ['/EmployeeDetails', '/ApplyLeave', '/LeaveHistory', '/MarkAttendance', '/AttendanceHistory'];
 
   return (
     <Router>
@@ -85,7 +87,7 @@ function App() {
               path="/"
               element={
                 isAuthenticated ? (
-                  <Navigate to="/EmployeeDetails" replace />
+                  <Navigate to="/MarkAttendance" replace />
                 ) : (
                   <LoginPage onLogin={handleLogin} />
                 )
@@ -96,6 +98,16 @@ function App() {
               element={
                 isAuthenticated ? (
                   <EmployeeDetails onLogout={handleLogout} />
+                ) : (
+                  <Navigate to="/" replace />
+                )
+              }
+            />
+            <Route
+              path="/MarkAttendance"
+              element={
+                isAuthenticated ? (
+                  <MarkAttendance onLogout={handleLogout} />
                 ) : (
                   <Navigate to="/" replace />
                 )
@@ -116,6 +128,16 @@ function App() {
               element={
                 isAuthenticated ? (
                   <LeaveHistory onLogout={handleLogout} leaveHistory={leaveData} />
+                ) : (
+                  <Navigate to="/" replace />
+                )
+              }
+            />
+            <Route
+              path="/AttendanceHistory"
+              element={
+                isAuthenticated ? (
+                  <AttendanceHistory onLogout={handleLogout} />
                 ) : (
                   <Navigate to="/" replace />
                 )

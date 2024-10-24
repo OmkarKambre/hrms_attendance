@@ -40,7 +40,7 @@ const LoginPage = ({ onLogin }) => {
           console.log('Employee login successful');
           localStorage.setItem('employee', JSON.stringify(data)); // Store employee data in local storage
           onLogin(true, data.name);
-          navigate('/EmployeeDetails');
+          navigate('/MarkAttendance'); // Redirect to Mark Attendance page
         }
       } catch (err) {
         console.error('Unexpected error:', err);

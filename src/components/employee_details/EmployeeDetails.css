@@ -127,3 +127,19 @@ body, html {
         align-items: flex-start; /* Align items to the start */
     }
 }
+
+/* Profile Initials */
+.app .employee-details-container .profile-initials {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #bb86fc; /* Background color for initials */
+    color: #ffffff; /* Text color for initials */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem; /* Font size for initials */
+    font-weight: bold;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Shadow for the initials */
+}
