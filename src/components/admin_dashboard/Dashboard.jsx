@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, Typography, Tooltip, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import GaugeChart from 'react-gauge-chart';
 import { ResponsiveContainer, PieChart, Pie, Cell, Legend, Tooltip as RechartsTooltip, BarChart, CartesianGrid, XAxis, YAxis, Bar, AreaChart, Area } from 'recharts';
+import { supabase } from '../../supabaseClient'; // Import the Supabase client
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -70,15 +71,7 @@ const Dashboard = () => {
   const employeeDaysPresent = totalWorkDays - 296; // 296 is the Employee Days Absent
 
   // Updated mock data for employees
-  const employees = [
-    'All',
-    'John Doe',
-    'Jane Smith',
-    'Mike Johnson',
-    'Emily Brown',
-    'David Lee',
-    // ... add more employee names as needed
-  ];
+  const [employees, setEmployees] = useState(['All']);
 
   // State for filters
   const [timeFilter, setTimeFilter] = useState('pastWeek');
@@ -107,18 +100,10 @@ const Dashboard = () => {
 
   // New mock data for today's and past attendance
   const totalEmployees = 28;
-  const todayAttendance = 25;
+  const [todayAttendance, setTodayAttendance] = useState(0);
+  const [totalLeaveEntries, setTotalLeaveEntries] = useState(0);
+  const [totalAttendanceEntries, setTotalAttendanceEntries] = useState(0);
   const todayAttendancePercentage = todayAttendance / totalEmployees;
-
-  const pastWeekAttendance = [
-    { day: 'Mon', attendance: 26 },
-    { day: 'Tue', attendance: 27 },
-    { day: 'Wed', attendance: 25 },
-    { day: 'Thu', attendance: 28 },
-    { day: 'Fri', attendance: 24 },
-    { day: 'Sat', attendance: 22 },
-    { day: 'Sun', attendance: 23 },
-  ];
 
   const pastMonthAttendance = [
     { week: 'Week 1', attendance: 92 },
@@ -135,6 +120,118 @@ const Dashboard = () => {
     { name: 'Emily Brown', leaves: 9 },
     { name: 'David Lee', leaves: 8 },
   ];
+
+  const [weeklyAttendanceData, setWeeklyAttendanceData] = useState([]);
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('employees')
+          .select('name');
+
+        if (error) {
+          console.error('Error fetching employees:', error);
+        } else {
+          setEmployees(['All', ...data.map(emp => emp.name)]);
+        }
+      } catch (err) {
+        console.error('Unexpected error:', err);
+      }
+    };
+
+    const fetchTodayAttendance = async () => {
+      try {
+        const today = new Date().toISOString().split('T')[0];
+        const { data, error } = await supabase
+          .from('employee_attendance')
+          .select('employee_id')
+          .eq('attendance_date', today);
+
+        if (error) {
+          console.error('Error fetching today\'s attendance:', error);
+        } else {
+          setTodayAttendance(data.length);
+        }
+      } catch (err) {
+        console.error('Unexpected error:', err);
+      }
+    };
+
+    const fetchTotalLeaveEntries = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('employee_leaves')
+          .select('leave_id');
+
+        if (error) {
+          console.error('Error fetching total leave entries:', error);
+        } else {
+          setTotalLeaveEntries(data.length);
+        }
+      } catch (err) {
+        console.error('Unexpected error:', err);
+      }
+    };
+
+    const fetchTotalAttendanceEntries = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('employee_attendance')
+          .select('attendance_id');
+
+        if (error) {
+          console.error('Error fetching total attendance entries:', error);
+        } else {
+          setTotalAttendanceEntries(data.length);
+        }
+      } catch (err) {
+        console.error('Unexpected error:', err);
+      }
+    };
+
+    const fetchWeeklyAttendanceData = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('employee_attendance')
+          .select('employee_id, attendance_date');
+
+        if (error) {
+          console.error('Error fetching attendance data:', error);
+        } else {
+          // Process data to group by weekday
+          const processedData = processAttendanceData(data);
+          setWeeklyAttendanceData(processedData);
+        }
+      } catch (err) {
+        console.error('Unexpected error:', err);
+      }
+    };
+
+    fetchEmployees();
+    fetchTodayAttendance();
+    fetchTotalLeaveEntries();
+    fetchTotalAttendanceEntries();
+    fetchWeeklyAttendanceData();
+  }, []);
+
+  const processAttendanceData = (data) => {
+    // Group data by weekday
+    const weekdayMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const groupedData = data.reduce((acc, record) => {
+      const date = new Date(record.attendance_date);
+      const weekday = weekdayMap[date.getUTCDay()];
+      if (!acc[weekday]) acc[weekday] = 0;
+      acc[weekday] += 1;
+      return acc;
+    }, {});
+
+    // Transform grouped data into an array suitable for plotting
+    return weekdayMap.map(day => ({
+      day,
+      attendance: groupedData[day] || 0,
+    }));
+  };
 
   return (
     <div className="dashboard-container">
@@ -184,9 +281,9 @@ const Dashboard = () => {
                 {todayAttendance}/{totalEmployees}
               </Typography>
               <CustomGauge 
-                rate={todayAttendancePercentage} 
+                rate={todayAttendance / totalEmployees} 
                 title="" 
-                color={todayAttendancePercentage < 0.5 ? "#FF5722" : "#4CAF50"} 
+                color={todayAttendance / totalEmployees < 0.5 ? "#FF5722" : "#4CAF50"} 
               />
             </CardContent>
           </Card>
@@ -195,8 +292,8 @@ const Dashboard = () => {
           <Card className="card">
             <CardContent className="card-content">
               <Typography className="card-title" align="center" gutterBottom>Employee Days Absent</Typography>
-              <Typography className="card-value" align="center">296</Typography>
-              <CustomGauge rate={absenteeismRate} title="" color="#FF5722" />
+              <Typography className="card-value" align="center">{totalLeaveEntries}</Typography>
+              <CustomGauge rate={totalLeaveEntries / totalWorkDays} title="" color="#FF5722" />
             </CardContent>
           </Card>
         </div>
@@ -204,33 +301,8 @@ const Dashboard = () => {
           <Card className="card">
             <CardContent className="card-content">
               <Typography className="card-title" align="center" gutterBottom>Employee Days Present</Typography>
-              <Typography className="card-value" align="center">{employeeDaysPresent}</Typography>
-              <CustomGauge rate={attendanceRate} title="" color="#4CAF50" />
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      {/* Past Attendance Chart */}
-      <div className="grid-container">
-        <div className="grid-item full-width">
-          <Card className="card">
-            <CardContent>
-              <Typography variant="h6" className="card-title">Past Attendance</Typography>
-              <div className="chart-container medium">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={getFilteredAttendanceData()}
-                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey={timeFilter === 'pastWeek' ? 'day' : 'week'} />
-                    <YAxis />
-                    <RechartsTooltip />
-                    <Bar dataKey="attendance" fill="#8884d8" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
+              <Typography className="card-value" align="center">{totalAttendanceEntries}</Typography>
+              <CustomGauge rate={totalAttendanceEntries / totalWorkDays} title="" color="#4CAF50" />
             </CardContent>
           </Card>
         </div>
@@ -366,6 +438,31 @@ const Dashboard = () => {
                     <RechartsTooltip formatter={(value) => `${value.toFixed(2)}%`} />
                     <Legend layout="horizontal" verticalAlign="bottom" align="center" />
                   </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Weekly Attendance Chart */}
+      <div className="grid-container">
+        <div className="grid-item full-width">
+          <Card className="card">
+            <CardContent>
+              <Typography variant="h6" className="card-title">Weekly Attendance</Typography>
+              <div className="chart-container medium">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={weeklyAttendanceData}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="day" />
+                    <YAxis />
+                    <RechartsTooltip />
+                    <Bar dataKey="attendance" fill="#8884d8" />
+                  </BarChart>
                 </ResponsiveContainer>
               </div>
             </CardContent>

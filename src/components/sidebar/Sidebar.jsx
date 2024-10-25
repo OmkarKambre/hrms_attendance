@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Drawer, List, ListItem, ListItemIcon, ListItemText, Box, Collapse, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
@@ -15,7 +15,7 @@ import companyLogo from './company-logo.png';
 import './Sidebar.css';
 
 const NestedMenuItem = ({ icon, primary, children, onClick, depth = 0, path }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = React.useState(false);
   const location = useLocation();
   const isActive = location.pathname.startsWith(path);
 

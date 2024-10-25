@@ -59,7 +59,7 @@ const LoginPage = ({ onLogin }) => {
         } else {
           console.log('Admin login successful');
           onLogin(true);
-          navigate('/admin_dashboard');
+          navigate('/dashboard'); // Redirect to Dashboard page for admin
         }
       } catch (err) {
         console.error('Unexpected error:', err);
