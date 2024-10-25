@@ -1,17 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NavBar from '../navbar/NavBar';
 import './AttendanceHistory.css';
+import { supabase } from '../../supabaseClient'; // Import Supabase client
 
 const AttendanceHistory = ({ onLogout }) => {
   const [dateSearch, setDateSearch] = useState('');
-  const attendanceHistory = [
-    { date: '2023-10-01', time: '09:00 AM', status: 'Present' },
-    { date: '2023-10-02', time: '09:15 AM', status: 'Absent' },
-    { date: '2023-10-03', time: '09:05 AM', status: 'Present' },
-  ];
+  const [attendanceHistory, setAttendanceHistory] = useState([]); // State for attendance history
+
+  useEffect(() => {
+    const fetchAttendanceHistory = async () => {
+      const storedEmployee = localStorage.getItem('employee');
+      if (storedEmployee) {
+        const { employee_id } = JSON.parse(storedEmployee);
+        if (employee_id) {  
+          const { data, error } = await supabase
+            .from('employee_attendance')
+            .select('*')
+            .eq('employee_id', employee_id);
+
+          if (error) {
+            console.error('Error fetching attendance history:', error.message);
+          } else {
+            setAttendanceHistory(data);
+          }
+        }
+      }
+    };
+
+    fetchAttendanceHistory();
+  }, []);
 
   const filteredHistory = attendanceHistory.filter(record =>
-    record.date.includes(dateSearch)
+    record.attendance_date.includes(dateSearch)
   );
 
   return (
@@ -34,15 +54,13 @@ const AttendanceHistory = ({ onLogout }) => {
               <tr>
                 <th>Date</th>
                 <th>Time</th>
-                <th>Status</th>
               </tr>
             </thead>
             <tbody>
               {filteredHistory.map((record, index) => (
                 <tr key={index}>
-                  <td>{record.date}</td>
-                  <td>{record.time}</td>
-                  <td>{record.status}</td>
+                  <td>{record.attendance_date}</td>
+                  <td>{record.attendance_time}</td>
                 </tr>
               ))}
             </tbody>
@@ -53,6 +71,6 @@ const AttendanceHistory = ({ onLogout }) => {
       </div>
     </div>
   );
-};  
+};
 
 export default AttendanceHistory;

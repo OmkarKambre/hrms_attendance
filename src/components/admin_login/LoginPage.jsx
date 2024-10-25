@@ -28,7 +28,7 @@ const LoginPage = ({ onLogin }) => {
       try {
         const { data, error } = await supabase
           .from('employees')
-          .select('name, email, password, pno, dept, position, created_at') // Include created_at
+          .select('employee_id, name, email, password, pno, dept, position, created_at, leave_count') // Include leave_count
           .eq('email', email)
           .eq('password', password)
           .single();

@@ -1,16 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import NavBar from '../navbar/NavBar'; // Import the NavBar component
 import './ApplyLeave.css'; // Import the CSS file for styling
+import { supabase } from '../../supabaseClient'; // Import Supabase client
 
 const ApplyLeave = ({ onLogout }) => { // Accept onLogout as a prop
   const [leaveType, setLeaveType] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [reason, setReason] = useState('');
-  const initialPendingLeaves = 3; // Initial pending leaves count
-  const [pendingLeaves, setPendingLeaves] = useState(initialPendingLeaves);
+  const [initialPendingLeaves, setInitialPendingLeaves] = useState(0);
+  const [pendingLeaves, setPendingLeaves] = useState(0);
   const [daysRequested, setDaysRequested] = useState(0);
   const [warning, setWarning] = useState('');
+  const [successMessage, setSuccessMessage] = useState(''); // State for success message
+
+  useEffect(() => {
+    const fetchPendingLeaves = async () => {
+      const storedEmployee = localStorage.getItem('employee');
+      if (storedEmployee) {
+        const { leave_count } = JSON.parse(storedEmployee);
+        setInitialPendingLeaves(leave_count || 0);
+        setPendingLeaves(leave_count || 0);
+      }
+    };
+
+    fetchPendingLeaves();
+  }, []);
 
   useEffect(() => {
     if (startDate && endDate) {
@@ -20,25 +35,83 @@ const ApplyLeave = ({ onLogout }) => { // Accept onLogout as a prop
       const daysDiff = timeDiff / (1000 * 60 * 60 * 24) + 1; // Include the start day
       setDaysRequested(daysDiff);
 
-      if (daysDiff > initialPendingLeaves) {
+      const updatedPendingLeaves = initialPendingLeaves - daysDiff;
+      setPendingLeaves(updatedPendingLeaves);
+
+      if (updatedPendingLeaves < 0) {
         setWarning('Selected dates exceed your pending leave count.');
       } else {
         setWarning('');
-        setPendingLeaves(initialPendingLeaves - daysDiff);
       }
     } else {
-      setWarning('');
+      setDaysRequested(0);
       setPendingLeaves(initialPendingLeaves);
+      setWarning('');
     }
   }, [startDate, endDate, initialPendingLeaves]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (daysRequested > initialPendingLeaves) {
-      alert('Cannot apply for more days than available pending leaves.');
-      return;
+
+    const storedEmployee = localStorage.getItem('employee');
+    if (storedEmployee) {
+      const { employee_id } = JSON.parse(storedEmployee);
+      console.log('Employee ID:', employee_id); // Debugging: Check employee_id
+
+      if (!employee_id) {
+        console.error('Employee ID is null or undefined');
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('employee_leaves')
+          .insert([
+            {
+              employee_id, // Use the employee_id from local storage
+              leave_type: leaveType,
+              start_date: startDate,
+              end_date: endDate,
+              reason,
+            },
+          ]);
+
+        if (error) {
+          console.error('Error inserting leave application:', error.message);
+        } else {
+          console.log('Leave application submitted:', data);
+          setSuccessMessage('Leave application submitted successfully!');
+          // Clear the form fields
+          setLeaveType('');
+          setStartDate('');
+          setEndDate('');
+          setReason('');
+          // Reset pending leaves to initial value
+          setPendingLeaves(initialPendingLeaves);
+          // Clear the success message after a few seconds
+          setTimeout(() => setSuccessMessage(''), 3000);
+
+          // Update the leave count in the employees table
+          const updatedLeaveCount = initialPendingLeaves - daysRequested;
+          const { error: updateError } = await supabase
+            .from('employees')
+            .update({ leave_count: updatedLeaveCount })
+            .eq('employee_id', employee_id);
+
+          if (updateError) {
+            console.error('Error updating leave count:', updateError.message);
+          } else {
+            // Update local storage and state with the new leave count
+            const updatedEmployee = { ...JSON.parse(storedEmployee), leave_count: updatedLeaveCount };
+            localStorage.setItem('employee', JSON.stringify(updatedEmployee));
+            setInitialPendingLeaves(updatedLeaveCount);
+            setPendingLeaves(updatedLeaveCount);
+          }
+        }
+      } catch (err) {
+        console.error('Unexpected error:', err);
+      }
     }
-    console.log('Leave Applied:', { leaveType, startDate, endDate, reason });
   };
 
   const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
@@ -48,6 +121,7 @@ const ApplyLeave = ({ onLogout }) => { // Accept onLogout as a prop
       <NavBar onLogout={onLogout} /> {/* Add the NavBar component */}
       <div className="apply-leave-container">
         <h2>Apply for Leave</h2>
+        {successMessage && <div className="success-message">{successMessage}</div>}
         <div className="pending-leaves">
           <p>Pending Leaves</p>
           <span>{pendingLeaves}</span>

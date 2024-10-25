@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import NavBar from '../navbar/NavBar'; // Import the NavBar component
 import './MarkAttendance.css'; // Import the CSS file for styling
+import { supabase } from '../../supabaseClient'; // Import Supabase client
 
 const MarkAttendance = ({ onLogout }) => {
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleString()); // Update to include date
@@ -15,15 +16,39 @@ const MarkAttendance = ({ onLogout }) => {
     return () => clearInterval(timer); // Cleanup the interval on component unmount
   }, []);
 
-  const handleMarkAttendance = () => {
+  const handleMarkAttendance = async () => {
     const userConfirmed = window.confirm("Are you sure you want to mark the attendance?");
     if (userConfirmed) {
       const now = new Date();
-      const formattedDate = now.toLocaleDateString();
-      const formattedTime = now.toLocaleTimeString();
+      const formattedDate = now.toISOString().split('T')[0]; // YYYY-MM-DD format
+      const formattedTime = now.toTimeString().split(' ')[0]; // HH:MM:SS format
       setAttendanceMarked(true); // Mark attendance
       setMarkedTime({ date: formattedDate, time: formattedTime }); // Store the date and time separately
-      // You can add additional logic here, such as sending data to a server
+
+      // Insert attendance record into the database
+      const storedEmployee = localStorage.getItem('employee');
+      if (storedEmployee) {
+        const { employee_id } = JSON.parse(storedEmployee);
+        try {
+          const { error } = await supabase
+            .from('employee_attendance')
+            .insert([
+              {
+                employee_id,
+                attendance_date: formattedDate,
+                attendance_time: formattedTime,
+              },
+            ]);
+
+          if (error) {
+            console.error('Error marking attendance:', error.message);
+          } else {
+            console.log('Attendance marked successfully in the database');
+          }
+        } catch (err) {
+          console.error('Unexpected error:', err);
+        }
+      }
     }
   };
 

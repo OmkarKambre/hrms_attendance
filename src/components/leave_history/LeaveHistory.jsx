@@ -1,22 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import NavBar from '../navbar/NavBar';
 import './LeaveHistory.css';
+import { supabase } from '../../supabaseClient'; // Import Supabase client
 
 const LeaveHistory = ({ onLogout }) => {
   const [nameSearch, setNameSearch] = useState('');
   const [yearSearch, setYearSearch] = useState('');
   const [monthSearch, setMonthSearch] = useState('');
-  const leaveHistory = [
-    { leaveType: 'Sick Leave', startDate: '2023-10-01', endDate: '2023-10-02', reason: 'Flu' },
-    { leaveType: 'Casual Leave', startDate: '2023-09-15', endDate: '2023-09-16', reason: 'Family Event' },
-    { leaveType: 'Annual Leave', startDate: '2023-08-10', endDate: '2023-08-20', reason: 'Vacation' },
-  ];
+  const [leaveHistory, setLeaveHistory] = useState([]); // State for leave history
+
+  useEffect(() => {
+    const fetchLeaveHistory = async () => {
+      const storedEmployee = localStorage.getItem('employee');
+      if (storedEmployee) {
+        const { employee_id } = JSON.parse(storedEmployee);
+        if (employee_id) {
+          const { data, error } = await supabase
+            .from('employee_leaves')
+            .select('*')
+            .eq('employee_id', employee_id);
+
+          if (error) {
+            console.error('Error fetching leave history:', error.message);
+          } else {
+            setLeaveHistory(data);
+          }
+        }
+      }
+    };
+
+    fetchLeaveHistory();
+  }, []);
 
   const filteredHistory = leaveHistory.filter(leave => {
-    const leaveYear = new Date(leave.startDate).getFullYear().toString();
-    const leaveMonth = (new Date(leave.startDate).getMonth() + 1).toString().padStart(2, '0');
+    const leaveYear = new Date(leave.start_date).getFullYear().toString();
+    const leaveMonth = (new Date(leave.start_date).getMonth() + 1).toString().padStart(2, '0');
     return (
-      leave.leaveType.toLowerCase().includes(nameSearch.toLowerCase()) &&
+      leave.leave_type.toLowerCase().includes(nameSearch.toLowerCase()) &&
       leaveYear.includes(yearSearch) &&
       leaveMonth.includes(monthSearch)
     );
@@ -63,9 +83,9 @@ const LeaveHistory = ({ onLogout }) => {
             <tbody>
               {filteredHistory.map((leave, index) => (
                 <tr key={index}>
-                  <td>{leave.leaveType}</td>
-                  <td>{leave.startDate}</td>
-                  <td>{leave.endDate}</td>
+                  <td>{leave.leave_type}</td>
+                  <td>{leave.start_date}</td>
+                  <td>{leave.end_date}</td>
                   <td>{leave.reason}</td>
                 </tr>
               ))}
