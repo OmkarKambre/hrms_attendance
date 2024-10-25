@@ -47,7 +47,12 @@ const NavBar = ({ onLogout }) => {
         >
           Mark Attendance
         </Link>
-        
+        <Link
+          to="/EmployeeAnnouncement" // Ensure this matches the route path in App.jsx
+          className={`navbar-link ${location.pathname === '/EmployeeAnnouncement' ? 'active' : ''}`}
+        >
+          Announcements
+        </Link>
         <span className="navbar-link logout-text" onClick={onLogout}>Logout</span>
       </div>
     </nav>

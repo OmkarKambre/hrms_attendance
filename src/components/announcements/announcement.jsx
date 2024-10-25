@@ -1,56 +1,137 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Card, CardContent, TextField, Radio, RadioGroup, FormControlLabel, FormControl, Typography, Snackbar, Alert, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
 import Select from 'react-select'
 import { Send, Announcement as AnnouncementIcon, Delete as DeleteIcon } from '@mui/icons-material'
+import { supabase } from '../../supabaseClient' // Import Supabase client
 import './announcement.css'
-
-// Mock employee data
-const employees = [
-  { id: '1', name: 'John Doe' },
-  { id: '2', name: 'Jane Smith' },
-  { id: '3', name: 'Bob Johnson' },
-  { id: '4', name: 'Alice Williams' },
-  { id: '5', name: 'Charlie Brown' },
-]
-
-// Mock previous announcements
-const previousAnnouncements = [
-  { id: 1, text: "Company picnic this Saturday!", date: "2023-06-15", recipient: "All Employees" },
-  { id: 2, text: "Congratulations on your promotion, Jane!", date: "2023-06-10", recipient: "Jane Smith" },
-  { id: 3, text: "New project kickoff meeting tomorrow at 10 AM", date: "2023-06-05", recipient: "All Employees" },
-]
 
 export default function AnnouncementPage() {
   const [announcement, setAnnouncement] = useState('')
   const [recipient, setRecipient] = useState('all')
   const [selectedEmployees, setSelectedEmployees] = useState([])
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' })
-  const [announcements, setAnnouncements] = useState(previousAnnouncements)
+  const [announcements, setAnnouncements] = useState([])
   const [deleteConfirmation, setDeleteConfirmation] = useState({ open: false, id: null })
+  const [employeeOptions, setEmployeeOptions] = useState([])
+  const [employeeMap, setEmployeeMap] = useState({})
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('employees')
+          .select('employee_id, name');
+
+        if (error) {
+          throw error;
+        }
+
+        const options = data.map(emp => ({ value: emp.employee_id, label: emp.name }));
+        setEmployeeOptions(options);
+
+        // Create a mapping of employee IDs to names
+        const employeeMap = data.reduce((acc, emp) => {
+          acc[emp.employee_id] = emp.name;
+          return acc;
+        }, {});
+        setEmployeeMap(employeeMap);
+      } catch (error) {
+        console.error('Error fetching employees:', error);
+        setSnackbar({ open: true, message: "Failed to load employees.", severity: "error" });
+      }
+    };
+
+    fetchEmployees();
+  }, []);
+
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('announcements')
+          .select('announcement_id, text, date, employee_id');
+
+        if (error) {
+          throw error;
+        }
+
+        setAnnouncements(data);
+      } catch (error) {
+        console.error('Error fetching announcements:', error);
+        setSnackbar({ open: true, message: "Failed to load announcements.", severity: "error" });
+      }
+    };
+
+    fetchAnnouncements();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (!announcement) {
-      setSnackbar({ open: true, message: "Please enter an announcement.", severity: "error" })
-      return
+      setSnackbar({ open: true, message: "Please enter an announcement.", severity: "error" });
+      return;
     }
     if (recipient === 'select' && selectedEmployees.length === 0) {
-      setSnackbar({ open: true, message: "Please select at least one employee.", severity: "error" })
-      return
+      setSnackbar({ open: true, message: "Please select at least one employee.", severity: "error" });
+      return;
     }
 
-    // Here you would typically send the announcement to a backend API
-    console.log('Sending announcement:', {
-      text: announcement,
-      recipients: recipient === 'all' ? 'All Employees' : selectedEmployees
-    })
+    // Fetch the current user's ID
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-    setSnackbar({ open: true, message: "Announcement sent successfully.", severity: "success" })
+    if (userError || !user) {
+      setSnackbar({ open: true, message: "Failed to identify admin.", severity: "error" });
+      return;
+    }
+
+    const adminId = user.id;
+
+    try {
+      if (recipient === 'all') {
+        // Fetch all employee IDs
+        const { data: employees, error: fetchError } = await supabase
+          .from('employees')
+          .select('employee_id, name');
+
+        if (fetchError) {
+          throw fetchError;
+        }
+
+        // Insert an announcement for each employee
+        const { error: insertError } = await supabase
+          .from('announcements')
+          .insert(employees.map(emp => ({
+            text: announcement,
+            employee_id: emp.employee_id
+          })));
+
+        if (insertError) {
+          throw insertError;
+        }
+      } else {
+        // Insert an announcement for each selected employee
+        const { error: insertError } = await supabase
+          .from('announcements')
+          .insert(selectedEmployees.map(emp => ({
+            text: announcement,
+            employee_id: emp.value
+          })));
+
+        if (insertError) {
+          throw insertError;
+        }
+      }
+
+      setSnackbar({ open: true, message: "Announcement sent successfully.", severity: "success" });
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      setSnackbar({ open: true, message: "Failed to send announcement.", severity: "error" });
+    }
 
     // Reset form
-    setAnnouncement('')
-    setRecipient('all')
-    setSelectedEmployees([])
+    setAnnouncement('');
+    setRecipient('all');
+    setSelectedEmployees([]);
   }
 
   const handleCloseSnackbar = (event, reason) => {
@@ -69,19 +150,33 @@ export default function AnnouncementPage() {
     setDeleteConfirmation({ open: true, id: id })
   }
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (deleteConfirmation.id !== null) {
-      setAnnouncements(announcements.filter(announcement => announcement.id !== deleteConfirmation.id))
-      setSnackbar({ open: true, message: "Announcement deleted successfully.", severity: "success" })
+      try {
+        // Delete the announcement from the database
+        const { error } = await supabase
+          .from('announcements')
+          .delete()
+          .eq('announcement_id', deleteConfirmation.id);
+
+        if (error) {
+          throw error;
+        }
+
+        // Update the local state
+        setAnnouncements(announcements.filter(announcement => announcement.announcement_id !== deleteConfirmation.id));
+        setSnackbar({ open: true, message: "Announcement deleted successfully.", severity: "success" });
+      } catch (error) {
+        console.error('Error deleting announcement:', error);
+        setSnackbar({ open: true, message: "Failed to delete announcement.", severity: "error" });
+      }
     }
-    setDeleteConfirmation({ open: false, id: null })
+    setDeleteConfirmation({ open: false, id: null });
   }
 
   const handleCancelDelete = () => {
     setDeleteConfirmation({ open: false, id: null })
   }
-
-  const employeeOptions = employees.map(emp => ({ value: emp.id, label: emp.name }))
 
   return (
     <div className="announcement-page">
@@ -89,27 +184,31 @@ export default function AnnouncementPage() {
         <header className="announcement-header">
           <Typography variant="h4" component="h1" className="announcement-title">
             <AnnouncementIcon className="announcement-icon" />
-            Announcements
+            <span className="title-text">Announcements</span>
           </Typography>
         </header>
 
         <div className="announcement-content">
-          <Card className="announcement-card">
+          <Card className="announcement-card new-announcement">
             <CardContent>
               <Typography variant="h5" component="h2" className="card-title">
                 Send New Announcement
               </Typography>
               <form onSubmit={handleSubmit} className="announcement-form">
-                <TextField
-                  fullWidth
-                  multiline
-                  rows={4}
-                  variant="outlined"
-                  label="Announcement"
-                  value={announcement}
-                  onChange={(e) => setAnnouncement(e.target.value)}
-                  className="announcement-input"
-                />
+                <div className="form-group">
+                  <TextField
+                    fullWidth
+                    multiline
+                    rows={4}
+                    variant="outlined"
+                    label="Announcement"
+                    value={announcement}
+                    onChange={(e) => setAnnouncement(e.target.value)}
+                    className="announcement-input"
+                    color="primary"
+                  />
+                </div>
+                
                 <FormControl component="fieldset" className="recipient-selection">
                   <Typography>Recipients</Typography>
                   <RadioGroup value={recipient} onChange={(e) => setRecipient(e.target.value)}>
@@ -117,16 +216,21 @@ export default function AnnouncementPage() {
                     <FormControlLabel value="select" control={<Radio color="primary" />} label="Select Employees" />
                   </RadioGroup>
                 </FormControl>
+                
                 {recipient === 'select' && (
-                  <Select
-                    isMulti
-                    options={employeeOptions}
-                    value={selectedEmployees}
-                    onChange={setSelectedEmployees}
-                    className="employee-select"
-                    placeholder="Select Employees"
-                  />
+                  <div className="select-container">
+                    <Select
+                      isMulti
+                      options={employeeOptions}
+                      value={selectedEmployees}
+                      onChange={setSelectedEmployees}
+                      className="employee-select"
+                      placeholder="Select Employees"
+                      classNamePrefix="react-select"
+                    />
+                  </div>
                 )}
+                
                 <Button
                   type="submit"
                   variant="contained"
@@ -155,15 +259,22 @@ export default function AnnouncementPage() {
                   </thead>
                   <tbody>
                     {announcements.map((item) => (
-                      <tr key={item.id}>
-                        <td>{item.date}</td>
-                        <td>{item.text}</td>
-                        <td>{item.recipient}</td>
-                        <td>
+                      <tr key={item.announcement_id}>
+                        <td data-label="Date" className="announcement-date">
+                          {new Date(item.date).toLocaleDateString()}
+                        </td>
+                        <td data-label="Announcement" className="announcement-text">
+                          {item.text}
+                        </td>
+                        <td data-label="Recipient" className="announcement-recipient">
+                          {employeeMap[item.employee_id] || 'All Employees'}
+                        </td>
+                        <td data-label="Action" className="announcement-action">
                           <IconButton
                             aria-label="delete"
-                            onClick={() => handleDeleteClick(item.id)}
+                            onClick={() => handleDeleteClick(item.announcement_id)}
                             className="delete-button"
+                            color="error"
                           >
                             <DeleteIcon />
                           </IconButton>

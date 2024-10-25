@@ -35,7 +35,7 @@ const AttendanceHistory = ({ onLogout }) => {
   );
 
   return (
-    <div className="attendance-history-page">
+    <div className="attendance-history-page-emp">
       <NavBar onLogout={onLogout} />
       <div className="attendance-history-container">
         <h2>Attendance History</h2>

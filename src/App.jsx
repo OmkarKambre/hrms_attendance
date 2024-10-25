@@ -15,6 +15,7 @@ import ApplyLeave from './components/apply_leave/ApplyLeave';
 import LeaveHistory from './components/leave_history/LeaveHistory';
 import MarkAttendance from './components/mark_attendance/MarkAttendance';
 import AttendanceHistory from './components/attendance_history/AttendanceHistory';
+import EmployeeAnnouncement from './components/em_announcements/EmployeeAnnouncement';
 import './App.css';
 
 function App() {
@@ -68,12 +69,12 @@ function App() {
     return <div>Loading...</div>;
   }
 
-  const employeePortalRoutes = ['/EmployeeDetails', '/ApplyLeave', '/LeaveHistory', '/MarkAttendance', '/AttendanceHistory'];
+  const noSidebarRoutes = ['/EmployeeDetails', '/ApplyLeave', '/LeaveHistory', '/MarkAttendance', '/AttendanceHistory', '/EmployeeAnnouncement'];
 
   return (
     <Router>
       <div className="app">
-        {isAuthenticated && !employeePortalRoutes.includes(window.location.pathname) && (
+        {isAuthenticated && !noSidebarRoutes.includes(window.location.pathname) && (
           <Sidebar 
             onLogout={handleLogout} 
             isMobile={isMobile}
@@ -218,6 +219,16 @@ function App() {
               element={
                 isAuthenticated ? (
                   <ManageAttendance />
+                ) : (
+                  <Navigate to="/" replace />
+                )
+              }
+            />
+            <Route
+              path="/EmployeeAnnouncement"
+              element={
+                isAuthenticated ? (
+                  <EmployeeAnnouncement onLogout={handleLogout} />
                 ) : (
                   <Navigate to="/" replace />
                 )

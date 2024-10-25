@@ -1,65 +1,310 @@
 :root {
-  --primary-color: #4CAF50;
-  --primary-dark: #45a049;
-  --primary-light: #81C784;
-  --primary-lighter: #E8F5E9;
+  --primary-color: #2e7d32;      /* MUI Green */
+  --primary-dark: #1b5e20;
+  --primary-light: #4caf50;
+  --primary-lighter: #e8f5e9;
   --text-color: #333333;
   --background-color: #f5f5f5;
   --card-background: #ffffff;
+  --error-color: #d32f2f;        /* MUI Red */
+  --error-light: #ffebee;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+/* Base container styles */
 .announcement-page {
   min-height: 100vh;
   background-color: var(--background-color);
-  padding: 2rem;
+  padding: 0.5rem;
+  width: 100%;
 }
 
 .announcement-container {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-}
-
-.announcement-header {
-  background-color: var(--card-background);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  padding: 1.5rem 2rem;
-  margin-bottom: 2rem;
+  padding: 0.5rem;
 }
 
 .announcement-content {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
 }
 
+/* Header styles */
+.announcement-header {
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.announcement-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-color) !important;
+}
+
+/* Card styles */
 .announcement-card {
-  background-color: var(--card-background);
+  background: var(--card-background);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
 }
 
-.announcement-card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+/* Table styles */
+.announcement-table-container {
+  margin-top: 1rem;
+  overflow-x: auto;
 }
 
-.card-title {
-  margin-bottom: 0.5rem !important;
-  color: var(--primary-color);
+.announcement-table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
+.announcement-table th,
+.announcement-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+/* Mobile table styles */
+@media (max-width: 767px) {
+  .announcement-table {
+    border-spacing: 0;
+    width: 100%;
+  }
+
+  .announcement-table thead {
+    display: none;
+  }
+
+  .announcement-table tr {
+    display: flex;
+    flex-direction: column;
+    background: var(--card-background);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+  }
+
+  .announcement-table td {
+    display: flex;
+    flex-direction: row; /* Change to row for side-by-side layout */
+    align-items: flex-start;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--primary-lighter);
+    text-align: left;
+  }
+
+  .announcement-table td:before {
+    content: attr(data-label);
+    font-weight: 600;
+    width: 100px; /* Fixed width for labels */
+    min-width: 100px;
+    color: var(--primary-color);
+    padding-right: 1rem;
+    margin-bottom: 0; /* Remove bottom margin */
+  }
+
+  /* Content styling */
+  .announcement-table td > span {
+    flex: 1; /* Take remaining space */
+    padding-left: 0.5rem;
+  }
+
+  /* Announcement text styling */
+  .announcement-table td[data-label="Announcement"] {
+    white-space: normal;
+    line-height: 1.5;
+  }
+
+  /* Date styling */
+  .announcement-table td[data-label="Date"] {
+    color: var(--text-color);
+  }
+
+  /* Recipient styling */
+  .announcement-table td[data-label="Recipient"] {
+    color: var(--text-color);
+  }
+
+  /* Action button container */
+  .announcement-table td[data-label="Action"] {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: none;
+    margin-top: 0;
+    border-top: none;
+  }
+
+  .announcement-table td[data-label="Action"]:before {
+    content: attr(data-label);
+    font-weight: 600;
+    width: 100px;
+    min-width: 100px;
+    color: var(--primary-color);
+    padding-right: 1rem;
+    display: inline-block !important;
+  }
+
+  /* Delete button styling */
+  .delete-button {
+    background-color: var(--error-light);
+    border-radius: 50%;
+    padding: 8px;
+    margin-left: auto;
+  }
+
+  /* Remove conflicting styles */
+  .announcement-table td[data-label="Action"] {
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    margin-top: 0;
+    border-top: none;
+  }
+
+  /* Override any styles that hide the action label */
+  .announcement-table td[data-label="Action"]:before {
+    display: inline-block !important;
+  }
+
+  /* Remove any styles that might be hiding or repositioning the action row */
+  @media (max-width: 767px) {
+    .announcement-table td[data-label="Action"] {
+      border-top: none;
+      margin-top: 0;
+      padding: 0.75rem 0;
+    }
+  }
+}
+
+/* Form styles */
 .announcement-form {
+  width: 100%;
   display: flex;
   flex-direction: column;
+  gap: 1rem;
 }
 
-.announcement-input, .recipient-selection, .employee-select {
-  margin-bottom: 1.5rem !important;
+.announcement-input {
+  width: 100% !important;
 }
 
+.recipient-selection {
+  margin: 1rem 0;
+}
+
+.select-container {
+  width: 100%;
+}
+
+/* Table styles */
+.announcement-table-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.announcement-table {
+  min-width: 100%;
+}
+
+/* Dialog styles */
+.MuiDialog-paper {
+  margin: 1rem;
+  width: calc(100% - 2rem);
+  max-width: 600px;
+}
+
+/* Responsive adjustments */
+@media (min-width: 480px) {
+  .announcement-page {
+    padding: 1rem;
+  }
+
+  .announcement-container {
+    padding: 1rem;
+  }
+
+  .announcement-card .MuiCardContent-root {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .announcement-page {
+    padding: 1.5rem;
+  }
+
+  .announcement-container {
+    padding: 1.5rem;
+  }
+
+  .announcement-header {
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .announcement-card .MuiCardContent-root {
+    padding: 2rem;
+  }
+
+  .announcement-form {
+    gap: 1.5rem;
+  }
+
+  .send-button {
+    margin: 1rem 0;
+  }
+
+  .announcement-table td {
+    white-space: normal;
+  }
+}
+
+@media (min-width: 1024px) {
+  .announcement-page {
+    padding: 2rem;
+  }
+
+  .announcement-container {
+    padding: 2rem;
+  }
+
+  .announcement-header {
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .announcement-content {
+    gap: 2rem;
+  }
+}
+
+/* Material-UI component overrides */
+.MuiTextField-root {
+  width: 100%;
+}
+
+.MuiFormControl-root {
+  width: 100%;
+}
+
+/* Button responsiveness */
 .send-button {
-  align-self: flex-start;
+  width: 100%;
+  max-width: 200px;
+  margin: 1rem auto;
   background-color: var(--primary-color) !important;
   color: white !important;
 }
@@ -68,203 +313,274 @@
   background-color: var(--primary-dark) !important;
 }
 
-.announcement-table-container {
-  width: 100%;
-  margin-bottom: 1rem;
-  overflow-x: auto; /* Add horizontal scroll for small screens */
+/* Snackbar positioning */
+.MuiSnackbar-root {
+  bottom: env(safe-area-inset-bottom, 24px);
 }
 
-.announcement-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  min-width: 600px; /* Ensure minimum width to prevent wrapping */
+/* Select Component Responsiveness */
+.react-select__control {
+  min-height: 40px !important;
 }
 
-.announcement-table th {
-  background-color: var(--primary-color);
-  color: white;
-  font-weight: bold;
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #e0e0e0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.react-select__menu {
+  width: 100% !important;
 }
 
-.announcement-table td {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #e0e0e0;
-  white-space: nowrap; /* Prevent text wrapping */
-  overflow: hidden;
-  text-overflow: ellipsis; /* Add ellipsis for overflowing text */
+/* Typography Responsiveness */
+.announcement-title {
+  font-size: clamp(1.5rem, 5vw, 2.5rem) !important;
 }
 
-.announcement-table td:nth-child(2) {
-  max-width: 300px; /* Limit width of announcement text column */
-  white-space: normal; /* Allow wrapping for announcement text */
-}
-
-.announcement-table tr:last-child td {
-  border-bottom: none;
-}
-
-.recipient-selection .MuiRadio-root.Mui-checked {
+.card-title {
+  font-size: clamp(1.25rem, 4vw, 1.5rem) !important;
   color: var(--primary-color);
 }
 
-.announcement-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline,
-.employee-select .react-select__control--is-focused {
-  border-color: var(--primary-color) !important;
+/* Dialog Responsiveness */
+.MuiDialog-paper {
+  margin: 16px !important;
+  width: calc(100% - 32px) !important;
+  max-width: 600px !important;
 }
 
-.announcement-input .MuiInputLabel-root.Mui-focused {
-  color: var(--primary-color) !important;
+/* Snackbar Responsiveness */
+.MuiSnackbar-root {
+  width: calc(100% - 32px) !important;
+  max-width: 600px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  bottom: 16px !important;
 }
 
-.employee-select .react-select__option--is-focused {
-  background-color: var(--primary-lighter);
+/* Update the mobile table transformation section */
+@media (max-width: 767px) {
+  /* ... existing mobile table styles ... */
+
+  .announcement-table td:last-child {
+    border-bottom: none;
+    text-align: right;
+    padding-left: 8px;
+    justify-content: flex-end;
+  }
+
+  /* Add these new styles */
+  .announcement-table td[data-label="Action"] {
+    padding-left: 8px;
+    justify-content: flex-end;
+  }
+
+  .announcement-table td[data-label="Action"]:before {
+    display: none; /* Hide the label for action column */
+  }
+
+  .delete-button {
+    padding: 8px;
+  }
 }
 
-.employee-select .react-select__option--is-selected {
-  background-color: var(--primary-color);
+/* Add these new styles for better button handling */
+.delete-button {
+  color: var(--error-color) !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
 }
 
-.employee-select .react-select__multi-value {
-  background-color: var(--primary-lighter);
+.delete-button:hover {
+  background-color: var(--error-light) !important;
 }
 
-.employee-select .react-select__multi-value__label {
-  color: var(--primary-dark);
-}
-
-.employee-select .react-select__multi-value__remove:hover {
-  background-color: var(--primary-light);
-  color: var(--primary-dark);
+/* Improve table cell content alignment */
+.announcement-table td {
+  vertical-align: middle;
 }
 
 @media (max-width: 767px) {
-  .announcement-page {
-    padding: 1rem;
-  }
-
-  .announcement-header {
-    padding: 1rem 1.5rem;
-  }
-
-  .announcement-content {
-    gap: 1rem;
+  .announcement-table td {
+    align-items: center;
+    min-height: 48px;
   }
 }
 
-@media (max-width: 768px) {
-  .announcement-page {
+/* Update header icon color */
+.announcement-icon {
+  color: var(--primary-color) !important;
+}
+
+/* Update radio buttons color */
+.MuiRadio-root.Mui-checked {
+  color: var(--primary-color) !important;
+}
+
+/* Update text field color */
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: var(--primary-color) !important;
+}
+
+.MuiFormLabel-root.Mui-focused {
+  color: var(--primary-color) !important;
+}
+
+/* Update select component colors */
+.react-select__control--is-focused {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 1px var(--primary-color) !important;
+}
+
+.react-select__option--is-selected {
+  background-color: var(--primary-color) !important;
+}
+
+.react-select__option--is-focused {
+  background-color: var(--primary-lighter) !important;
+}
+
+/* Dialog button colors */
+.MuiButton-containedPrimary {
+  background-color: var(--primary-color) !important;
+}
+
+.MuiButton-containedPrimary:hover {
+  background-color: var(--primary-dark) !important;
+}
+
+/* Card title colors */
+.card-title {
+  color: var(--primary-color);
+}
+
+/* Table header colors */
+.announcement-table th {
+  background-color: var(--primary-lighter);
+  color: var(--primary-dark);
+}
+
+/* Mobile view styles update */
+@media (max-width: 767px) {
+  .announcement-table tr {
+    border: 1px solid var(--primary-lighter);
+  }
+}
+
+/* Mobile-specific styles */
+@media (max-width: 767px) {
+  /* Card spacing and padding */
+  .announcement-card {
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+  }
+
+  /* Table styles for mobile */
+  .announcement-table tr {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 1rem;
   }
 
-  .announcement-header {
-    padding: 1rem 1.5rem;
+  .announcement-table td {
+    display: flex;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--primary-lighter);
+    text-align: left;
+    padding-left: 0;
   }
 
-  .announcement-content {
-    gap: 1rem;
+  .announcement-table td:before {
+    content: attr(data-label);
+    font-weight: 600;
+    width: 120px;
+    min-width: 120px;
+    color: var(--primary-color);
+    padding-right: 1rem;
   }
 
-  .card-title {
-    font-size: 1.25rem !important;
+  .announcement-table td:last-child {
+    border-bottom: none;
   }
 
+  /* Action button container */
+  .announcement-table td[data-label="Action"] {
+    justify-content: flex-end;
+    padding: 0.5rem 0 0 0;
+    margin-top: 0.5rem;
+    border-top: 1px solid var(--primary-lighter);
+  }
+
+  .announcement-table td[data-label="Action"]:before {
+    display: none;
+  }
+
+  /* Announcement text styling */
+  .announcement-table td[data-label="Announcement"] {
+    align-items: flex-start;
+  }
+
+  /* Date styling */
+  .announcement-table td[data-label="Date"] {
+    color: var(--text-color);
+  }
+
+  /* Delete button styling */
+  .delete-button {
+    background-color: var(--error-light);
+    border-radius: 50%;
+    padding: 8px;
+    margin-left: auto;
+  }
+
+  /* Form responsiveness */
   .announcement-form {
     gap: 1rem;
   }
 
+  .announcement-input {
+    margin-bottom: 1rem;
+  }
+
+  /* Header responsiveness */
+  .announcement-header {
+    padding: 1rem 0;
+  }
+
+  .announcement-title {
+    font-size: 1.5rem !important;
+  }
+
+  /* Card title responsiveness */
+  .card-title {
+    font-size: 1.25rem !important;
+    margin-bottom: 1rem;
+  }
+
+  /* Select container spacing */
+  .select-container {
+    margin-bottom: 1rem;
+  }
+
+  /* Send button positioning */
   .send-button {
     width: 100%;
-  }
-
-  .announcement-table-container {
-    margin-left: -1rem;
-    margin-right: -1rem;
-    padding: 0 1rem;
-    overflow-x: auto; /* Ensure horizontal scroll on small screens */
-  }
-
-  .announcement-table {
-    min-width: 600px; /* Maintain minimum width on small screens */
-  }
-
-  .announcement-table th,
-  .announcement-table td {
-    padding: 0.5rem;
-    font-size: 0.9rem;
+    margin: 1rem 0;
   }
 }
 
+/* Additional mobile optimizations */
 @media (max-width: 480px) {
-  .announcement-page {
+  .announcement-container {
     padding: 0.5rem;
-  }
-
-  .announcement-header {
-    padding: 0.75rem 1rem;
   }
 
   .announcement-card {
-    padding: 0.75rem;
+    border-radius: 4px;
   }
 
-  .card-title {
-    font-size: 1.1rem !important;
-  }
-
-  .announcement-input {
-    margin-bottom: 1rem !important;
-  }
-
-  .recipient-selection {
-    margin-bottom: 1rem !important;
-  }
-
-  .employee-select {
-    margin-bottom: 1rem !important;
-  }
-
-  .announcement-table th,
-  .announcement-table td {
-    padding: 0.5rem;
-    font-size: 0.8rem;
-  }
-
-  .announcement-table-container {
-    margin-left: -0.75rem;
-    margin-right: -0.75rem;
-    padding: 0 0.75rem;
+  .announcement-table td:before {
+    width: 100px;
+    min-width: 100px;
   }
 }
 
-.announcement-title {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.announcement-icon {
-  color: var(--primary-color);
-  font-size: 2rem !important;
-}
-
-.delete-button {
-  background-color: #f44336 !important;
-  color: white !important;
-  padding: 6px !important;
-  min-width: 0 !important;
-}
-
-.delete-button:hover {
-  background-color: #d32f2f !important;
-}
-
-.announcement-table td:last-child {
-  width: 1%;
-  white-space: nowrap;
-}

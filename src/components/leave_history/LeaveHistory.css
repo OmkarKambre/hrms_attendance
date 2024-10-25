@@ -58,11 +58,12 @@ h2 {
     border: 1px solid #444;
     padding: 12px;
     text-align: left;
+    color: #ffffff; /* Added white color for table text */
 }
 
 .leave-history-table th {
     background-color: #333;
-    color: #bb86fc;
+    color: #bb86fc; /* Keep header color as purple */
     font-weight: bold;
 }
 

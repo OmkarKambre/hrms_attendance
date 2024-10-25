@@ -1,0 +1,111 @@
+.announcement-container {
+  padding: 20px;
+  background-color: #1c1c1c;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 600px;
+  width: 90%;
+  margin: 100px auto 20px 160px;
+  font-family: 'Arial', sans-serif;
+  color: #e0e0e0;
+  overflow-x: hidden;
+}
+
+.announcement-title-emp {
+  font-size: clamp(24px, 4vw, 28px);
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #9b59b6;
+  border-bottom: 2px solid #8e44ad;
+  padding-bottom: 5px;
+}
+
+.announcement-item {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #2c2c2c;
+  border-radius: 5px;
+  transition: transform 0.2s ease;
+}
+
+.announcement-item:hover {
+  transform: translateY(-2px);
+}
+
+.announcement-text {
+  font-size: clamp(16px, 3vw, 18px);
+  color: #e0e0e0;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
+
+.announcement-date {
+  font-size: clamp(12px, 2vw, 14px);
+  color: #b0b0b0;
+  margin-top: 5px;
+}
+
+.announcement-error {
+  color: #ff6b6b;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: rgba(255, 107, 107, 0.1);
+  margin-bottom: 15px;
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .announcement-container {
+    width: 85%;
+    margin: 110px auto 20px 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .announcement-container {
+    width: 90%;
+    margin: 110px auto 20px 20px;
+    padding: 15px;
+  }
+
+  .announcement-item {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .announcement-container {
+    width: 95%;
+    margin: 110px auto 20px 10px;
+    padding: 12px;
+  }
+
+  .announcement-item {
+    padding: 10px;
+    margin-bottom: 15px;
+  }
+}
+
+/* Dark mode optimization */
+@media (prefers-color-scheme: dark) {
+  .announcement-container {
+    background-color: #1c1c1c;
+  }
+
+  .announcement-item {
+    background-color: #2c2c2c;
+  }
+}
+
+/* Ensure content is readable on very small screens */
+@media (max-width: 320px) {
+  .announcement-container {
+    margin: 110px auto 20px 5px;
+    padding: 10px;
+  }
+
+  .announcement-title {
+    margin-bottom: 10px;
+  }
+}

@@ -1,4 +1,4 @@
-.attendance-history-page {
+.attendance-history-page-emp {
     padding: 0;
     color: #e0e0e0;
     min-height: 100vh;
@@ -58,11 +58,12 @@ h2 {
     border: 1px solid #444;
     padding: 12px;
     text-align: left;
+    color: #ffffff; /* Added white color for all table text */
 }
 
 .attendance-history-table th {
     background-color: #333;
-    color: #bb86fc;
+    color: #bb86fc; /* Keep header color as purple */
     font-weight: bold;
 }
 
