@@ -174,22 +174,17 @@ const LeaveBalanceReport = ({ leaveData }) => {
     return Object.entries(groupedEmployees).map(([group, employees]) => (
       <React.Fragment key={group}>
         <tr className="group-header">
-          <td colSpan="6">{group}</td>
+          <td colSpan="3">{group}</td>
         </tr>
         {employees.map(employee => (
           <tr key={employee.id}>
             <td>{employee.id}</td>
             <td>{employee.name}</td>
             <td>
-              {calculateRemainingLeave(employee.annual, employee.used.annual)} / {employee.annual}
+              Annual: {calculateRemainingLeave(employee.annual, employee.used.annual)}, 
+              Sick: {calculateRemainingLeave(employee.sick, employee.used.sick)}, 
+              Personal: {calculateRemainingLeave(employee.personal, employee.used.personal)}
             </td>
-            <td>
-              {calculateRemainingLeave(employee.sick, employee.used.sick)} / {employee.sick}
-            </td>
-            <td>
-              {calculateRemainingLeave(employee.personal, employee.used.personal)} / {employee.personal}
-            </td>
-            <td>{getTotalUsedLeave(employee)}</td>
           </tr>
         ))}
       </React.Fragment>
@@ -309,10 +304,7 @@ const LeaveBalanceReport = ({ leaveData }) => {
               <tr>
                 <th>Employee ID</th>
                 <th>Employee Name</th>
-                <th>Annual Leave</th>
-                <th>Sick Leave</th>
-                <th>Personal Leave</th>
-                <th>Total Used</th>
+                <th>Remaining Leaves</th>
               </tr>
             </thead>
             <tbody>

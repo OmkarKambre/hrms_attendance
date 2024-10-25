@@ -21,13 +21,13 @@
 }
 
 .grid-item {
-  flex-basis: calc(25% - 18px);
-  max-width: calc(25% - 18px);
+  flex-basis: calc(30% - 5px); /* Adjust to 50% width */
+  max-width: calc(30% - 5px);
 }
 
 .grid-item.wide {
-  flex-basis: calc(33.333% - 16px);
-  max-width: calc(33.333% - 16px);
+  flex-basis: calc(50% - 12px); /* Adjust to 50% width */
+  max-width: calc(50% - 12px);
 }
 
 .grid-item.full-width {
@@ -38,6 +38,11 @@
 .grid-item.half-width {
   flex-basis: calc(50% - 12px);
   max-width: calc(50% - 12px);
+}
+
+.grid-item.attendance, .grid-item.absent {
+  flex-basis: calc(40% - 12px); /* Increase width to 40% */
+  max-width: calc(40% - 12px);
 }
 
 .card {
@@ -56,14 +61,14 @@
 }
 
 .card-title {
-  font-size: 16px;
+  font-size: 35px;
   color: #666;
   margin-bottom: 12px;
 }
 
 .card-value {
-  font-size: 32px;
-  font-weight: bold;
+  font-size: 80px; /* Increase the font size */
+  font-weight: bold; /* Ensure the text is bold */
   color: #333;
 }
 
@@ -285,3 +290,5 @@ body, html {
   background-color: #ffffff; /* Change to white */
   /* Other styles */
 }
+
+

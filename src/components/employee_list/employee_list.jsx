@@ -1,52 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
+import { supabase } from '../../supabaseClient'; // Import the Supabase client
 import './employee_list.css';
 
 function EmployeeList() {
-    // Sample employee data
-    const employees = [
-        {
-            id: 1,
-            name: 'John Doe',
-            role: 'Software Engineer',
-            contact: 'john.doe@example.com',
-            photo: 'https://i.pinimg.com/236x/bf/1e/96/bf1e96ab228573b5f14cca020f781bad.jpg',
-        },
-        {
-            id: 2,
-            name: 'Jane Smith',
-            role: 'Project Manager',
-            contact: 'jane.smith@example.com',
-            photo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8hyLQipUmF-WkC6urthWlA_O5oDIK66-GthkDr_SGluXq4J1SKEo5FA0&s',
-        },
-        {
-            id: 3,
-            name: 'Alice Johnson',
-            role: 'UX Designer',
-            contact: 'alice.johnson@example.com',
-            photo: 'https://i.pinimg.com/736x/da/71/86/da7186c69318ebba614256bfe05fa68d.jpg',
-        },
-        {
-            id: 4,
-            name: 'Bob Brown',
-            role: 'Data Analyst',
-            contact: 'bob.brown@example.com',
-            photo: 'https://i.pinimg.com/736x/53/b6/92/53b6924ead89cd43c0743bf166082516.jpg',
-        }
-    ];
+    const [employees, setEmployees] = useState([]);
+    const [selectedOptions, setSelectedOptions] = useState([]);
+    const [filteredEmployees, setFilteredEmployees] = useState([]);
+
+    useEffect(() => {
+        const fetchEmployees = async () => {
+            const { data, error } = await supabase
+                .from('employees')
+                .select('*');
+
+            if (error) {
+                console.error('Error fetching employees:', error);
+            } else {
+                setEmployees(data);
+                setFilteredEmployees(data); // Show all employees by default
+            }
+        };
+
+        fetchEmployees();
+    }, []);
 
     const options = employees.map(employee => ({
         value: employee.name,
         label: employee.name,
     }));
 
-    const [selectedOptions, setSelectedOptions] = useState([]); // Change to array for multiple selections
-    const [filteredEmployees, setFilteredEmployees] = useState(employees); // Show all employees by default
-
     const handleChange = (options) => {
-        setSelectedOptions(options); // Update selected options
-        const selectedNames = options.map(option => option.value); // Get selected names
-        // Filter to show only the selected employees
+        setSelectedOptions(options);
+        const selectedNames = options.map(option => option.value);
         setFilteredEmployees(employees.filter(employee => selectedNames.includes(employee.name)));
     };
 
@@ -58,7 +44,13 @@ function EmployeeList() {
     };
 
     const handleViewDetails = (employee) => {
-        alert(`Details for ${employee.name}:\nRole: ${employee.role}\nContact: ${employee.contact}`);
+        alert(`Details for ${employee.name}:\nRole: ${employee.position}\nContact: ${employee.email}`);
+    };
+
+    const getInitials = (name) => {
+        const nameParts = name.split(' ');
+        const initials = nameParts.map(part => part[0]).join('');
+        return initials.toUpperCase();
     };
 
     return (
@@ -74,8 +66,8 @@ function EmployeeList() {
                         options={options}
                         placeholder="Search by name..."
                         isClearable
-                        isMulti // Enable multi-select
-                        onInputChange={handleSearchChange} // Update search term on input change
+                        isMulti
+                        onInputChange={handleSearchChange}
                         styles={{
                             control: (base) => ({
                                 ...base,
@@ -93,13 +85,15 @@ function EmployeeList() {
                 </div>
             </div>
             {filteredEmployees.map((employee) => (
-                <div className="employee-item" key={employee.id}>
-                    <img src={employee.photo} alt={employee.name} className="employee-photo" />
+                <div className="employee-item" key={employee.employee_id}>
+                    <div className="employee-initials">
+                        {getInitials(employee.name)}
+                    </div>
                     <div className="employee-details">
                         <div className="employee-info">
                             <div className="employee-name">{employee.name}</div>
-                            <div className="employee-role">{employee.role}</div>
-                            <div className="employee-contact">{employee.contact}</div>
+                            <div className="employee-role">{employee.position}</div>
+                            <div className="employee-contact">{employee.email}</div>
                         </div>
                         <button className="button" onClick={() => handleViewDetails(employee)}>View Details</button>
                     </div>

@@ -136,15 +136,48 @@ body {
 @media (max-width: 768px) {
     .employee-list-container {
         padding: 10px; /* Less padding on smaller screens */
+        margin: 10px; /* Reduce margin for smaller screens */
     }
 
     .employee-item {
         flex-direction: column; /* Stack items vertically */
         align-items: flex-start; /* Align items to the start */
+        padding: 10px; /* Reduce padding for smaller screens */
+    }
+
+    .employee-details {
+        flex-direction: column; /* Stack details and button vertically */
+        align-items: flex-start; /* Align items to the start */
+        width: 100%; /* Ensure full width */
+    }
+
+    .employee-info {
+        margin-left: 0; /* Remove left margin for smaller screens */
+        margin-bottom: 10px; /* Add space below info */
+    }
+
+    .button {
+        margin-top: 10px; /* Add space above the button */
+        margin-left: 0; /* Reset left margin */
+        width: 100%; /* Full width button on mobile */
+    }
+
+    .search-input-container {
+        max-width: 100%; /* Allow full width on smaller screens */
     }
 
     .search-input {
-        width: 90%; /* Adjust width for smaller screens */
+        width: 100%; /* Full width of the container */
+    }
+
+    .employee-initials {
+        margin-bottom: 10px; /* Add space below initials */
+        width: 60px; /* Reduce size for smaller screens */
+        height: 60px; /* Reduce size for smaller screens */
+    }
+
+    .employee-name, .employee-role, .employee-contact {
+        font-size: 16px; /* Adjust font size for readability */
     }
 }
 
@@ -239,4 +272,24 @@ body {
 
 .react-select__clear-indicator:hover {
     color: #4caf50; /* Change color on hover */
+}
+
+/* Employee initials styles */
+.employee-initials {
+    width: 80px; /* Same size as the previous image */
+    height: 80px; /* Same size as the previous image */
+    border-radius: 50%; /* Circular shape */
+    background-color: #4caf50; /* Background color */
+    color: white; /* Text color */
+    display: flex; /* Flexbox for centering */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    font-size: 24px; /* Font size for initials */
+    font-weight: bold; /* Bold text */
+    margin-right: 15px; /* Space between initials and text */
+}
+
+/* Employee contact styles */
+.employee-contact {
+    color: black; /* Change email text color to black */
 }

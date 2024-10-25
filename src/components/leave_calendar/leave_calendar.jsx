@@ -3,10 +3,12 @@ import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './leave_calendar.css';
+import { supabase } from '../../supabaseClient'; // Import the existing Supabase client
 
 const localizer = momentLocalizer(moment);
 
 const CustomToolbar = ({ date, onNavigate, onView, view }) => {
+  
   const [currentDate, setCurrentDate] = useState(date);
 
   const goToToday = () => {
@@ -103,59 +105,56 @@ const CustomEvent = ({ event }) => (
   </div>
 );
 
-const leave_calendar = ({ leaveData, onLeaveDataChange }) => {
+const LeaveCalendar = () => {
+  const [leaveData, setLeaveData] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   useEffect(() => {
-    // If you want to update the leave data from within this component,
-    // you can do so here. For now, we'll just ensure it's set.
-    if (leaveData.length > 0) {
-      onLeaveDataChange(leaveData);
-    }
-  }, [leaveData, onLeaveDataChange]);
+    const fetchLeaveData = async () => {
+      const { data, error } = await supabase
+        .from('employee_leaves')
+        .select('employee_id, leave_type, start_date, end_date, reason');
+
+      if (error) {
+        console.error('Error fetching leave data:', error);
+        return;
+      }
+
+      setLeaveData(data.map(leave => ({
+        employee: leave.employee_id,
+        reason: leave.reason || leave.leave_type,
+        start: leave.start_date,
+        end: leave.end_date
+      })));
+    };
+
+    fetchLeaveData();
+  }, []);
 
   const events = useCallback(() => {
     const eventMap = {};
     
-    // Static dates for September 2024
-    const staticDates = [
-      { date: '2024-09-02', employeesOnLeave: 2, employees: [{ name: 'John Doe', reason: 'Vacation' }, { name: 'Jane Smith', reason: 'Sick Leave' }] },
-      { date: '2024-09-15', employeesOnLeave: 1, employees: [{ name: 'Alice Johnson', reason: 'Personal Day' }] },
-      { date: '2024-09-23', employeesOnLeave: 3, employees: [{ name: 'Bob Wilson', reason: 'Conference' }, { name: 'Carol Brown', reason: 'Vacation' }, { name: 'David Lee', reason: 'Family Event' }] },
-    ];
-
-    // Add static dates to the eventMap
-    staticDates.forEach(staticDate => {
-      const date = staticDate.date;
-      eventMap[date] = {
-        start: new Date(date),
-        end: new Date(date),
-        title: "Employees on Leave",
-        employeesOnLeave: staticDate.employeesOnLeave,
-        employees: staticDate.employees
-      };
-    });
-
-    // Process dynamic leaveData
     leaveData.forEach(leave => {
-      const start = moment(leave.start);
-      const end = moment(leave.end);
-      const duration = moment.duration(end.diff(start));
-      const days = duration.asDays() + 1;
+      const start = new Date(leave.start);
+      const end = new Date(leave.end);
+      const duration = (end - start) / (1000 * 60 * 60 * 24) + 1;
 
-      for (let i = 0; i < days; i++) {
-        const date = moment(start).add(i, 'days').format('YYYY-MM-DD');
-        if (!eventMap[date]) {
-          eventMap[date] = {
-            start: new Date(date),
-            end: new Date(date),
+      for (let i = 0; i < duration; i++) {
+        const date = new Date(start);
+        date.setDate(start.getDate() + i);
+        const dateString = date.toISOString().split('T')[0];
+
+        if (!eventMap[dateString]) {
+          eventMap[dateString] = {
+            start: date,
+            end: date,
             title: "Employees on Leave",
             employeesOnLeave: 0,
             employees: []
           };
         }
-        eventMap[date].employeesOnLeave++;
-        eventMap[date].employees.push({ name: leave.employee, reason: leave.reason });
+        eventMap[dateString].employeesOnLeave++;
+        eventMap[dateString].employees.push({ name: leave.employee, reason: leave.reason });
       }
     });
     return Object.values(eventMap);
@@ -190,4 +189,4 @@ const leave_calendar = ({ leaveData, onLeaveDataChange }) => {
   );
 };
 
-export default leave_calendar;
+export default LeaveCalendar;

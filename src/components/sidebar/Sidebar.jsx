@@ -140,12 +140,6 @@ const Sidebar = ({ onLogout, isMobile, isOpen, toggleSidebar }) => {
               path="/leave-calendar"
               depth={2}
             />
-            <NestedMenuItem
-              primary="Balance Leaves"
-              onClick={() => navigate('/leave-balance')}
-              path="/leave-balance"
-              depth={2}
-            />
           </NestedMenuItem>
         </NestedMenuItem>
         <ListItem onClick={handleLogout} className="menu-item">
