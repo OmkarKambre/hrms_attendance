@@ -179,22 +179,22 @@ export default function AnnouncementPage() {
   }
 
   return (
-    <div className="announcement-page">
-      <div className="announcement-container">
-        <header className="announcement-header">
-          <Typography variant="h4" component="h1" className="announcement-title">
+    <div className="announcements-page">
+      <div className="announcements-wrapper">
+        <header className="announcements-header">
+          <Typography variant="h4" component="h1" className="announcements-header__title">
             <AnnouncementIcon className="announcement-icon" />
             <span className="title-text">Announcements</span>
           </Typography>
         </header>
 
-        <div className="announcement-content">
-          <Card className="announcement-card new-announcement">
+        <div className="announcements-layout">
+          <Card className="announcements-card">
             <CardContent>
               <Typography variant="h5" component="h2" className="card-title">
                 Send New Announcement
               </Typography>
-              <form onSubmit={handleSubmit} className="announcement-form">
+              <form onSubmit={handleSubmit} className="announcements-form">
                 <div className="form-group">
                   <TextField
                     fullWidth
@@ -204,12 +204,12 @@ export default function AnnouncementPage() {
                     label="Announcement"
                     value={announcement}
                     onChange={(e) => setAnnouncement(e.target.value)}
-                    className="announcement-input"
+                    className="announcements-form__input"
                     color="primary"
                   />
                 </div>
                 
-                <FormControl component="fieldset" className="recipient-selection">
+                <FormControl component="fieldset" className="announcements-form__recipients">
                   <Typography>Recipients</Typography>
                   <RadioGroup value={recipient} onChange={(e) => setRecipient(e.target.value)}>
                     <FormControlLabel value="all" control={<Radio color="primary" />} label="All Employees" />
@@ -218,7 +218,7 @@ export default function AnnouncementPage() {
                 </FormControl>
                 
                 {recipient === 'select' && (
-                  <div className="select-container">
+                  <div className="announcements-form__select">
                     <Select
                       isMulti
                       options={employeeOptions}
@@ -236,56 +236,51 @@ export default function AnnouncementPage() {
                   variant="contained"
                   color="primary"
                   startIcon={<Send />}
-                  className="send-button"
+                  className="announcements-submit-btn"
                 >
                   Send Announcement
                 </Button>
               </form>
             </CardContent>
           </Card>
-
-          <Card className="announcement-card previous-announcements">
-            <CardContent>
-              <Typography variant="h5" component="h2" className="card-title">Previous Announcements</Typography>
-              <div className="announcement-table-container">
-                <table className="announcement-table">
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-                      <th>Announcement</th>
-                      <th>Recipient</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {announcements.map((item) => (
-                      <tr key={item.announcement_id}>
-                        <td data-label="Date" className="announcement-date">
-                          {new Date(item.date).toLocaleDateString()}
-                        </td>
-                        <td data-label="Announcement" className="announcement-text">
-                          {item.text}
-                        </td>
-                        <td data-label="Recipient" className="announcement-recipient">
-                          {employeeMap[item.employee_id] || 'All Employees'}
-                        </td>
-                        <td data-label="Action" className="announcement-action">
-                          <IconButton
-                            aria-label="delete"
-                            onClick={() => handleDeleteClick(item.announcement_id)}
-                            className="delete-button"
-                            color="error"
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
+          
+          <div className="announcements-table-container">
+            <table className="announcements-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Announcement</th>
+                  <th>Recipient</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {announcements.map((item) => (
+                  <tr key={item.announcement_id}>
+                    <td data-label="Date" className="announcement-date">
+                      {new Date(item.date).toLocaleDateString()}
+                    </td>
+                    <td data-label="Announcement" className="announcement-text">
+                      {item.text}
+                    </td>
+                    <td data-label="Recipient" className="announcement-recipient">
+                      {employeeMap[item.employee_id] || 'All Employees'}
+                    </td>
+                    <td data-label="Action" className="announcement-action">
+                      <IconButton
+                        aria-label="delete"
+                        onClick={() => handleDeleteClick(item.announcement_id)}
+                        className="delete-button"
+                        color="error"
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       <Dialog

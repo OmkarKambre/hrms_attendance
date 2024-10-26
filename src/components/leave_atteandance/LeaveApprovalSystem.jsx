@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Badge,
   LeaveRequestTable,
@@ -7,36 +7,147 @@ import {
   FilterSelect
 } from './LeaveApprovalProps';
 import './LeaveApprovalStyles.css';
-
-const initialLeaveRequests = [
-  { id: 1, employeeName: "John Doe", leaveType: "Vacation", startDate: "2023-07-01", endDate: "2023-07-05", status: "pending", description: "Annual family trip to the beach." },
-  { id: 2, employeeName: "Jane Smith", leaveType: "Sick Leave", startDate: "2023-07-10", endDate: "2023-07-11", status: "pending", description: "Caught a severe cold, need rest as per doctor's advice." },
-  { id: 3, employeeName: "Bob Johnson", leaveType: "Personal", startDate: "2023-07-15", endDate: "2023-07-16", status: "pending", description: "Attending a family wedding." },
-  { id: 4, employeeName: "Alice Brown", leaveType: "Vacation", startDate: "2023-07-20", endDate: "2023-07-25", status: "approved", description: "Summer vacation with kids." },
-  { id: 5, employeeName: "Charlie Davis", leaveType: "Sick Leave", startDate: "2023-07-18", endDate: "2023-07-19", status: "rejected", description: "Dental surgery and recovery." },
-];
+import { supabase } from '../../supabaseClient';
 
 export default function LeaveApprovalSystem() {
-  const [leaveRequests, setLeaveRequests] = useState(initialLeaveRequests);
+  const [leaveRequests, setLeaveRequests] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [statusFilter, setStatusFilter] = useState("all");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isUpdating, setIsUpdating] = useState(false);
 
-  const handleAction = (id, action) => {
-    setLeaveRequests(requests =>
-      requests.map(request =>
-        request.id === id ? { ...request, status: action === 'approve' ? 'approved' : 'rejected' } : request
-      )
-    );
-    setSelectedRequest(null);
+  // Fetch leave requests from database
+  useEffect(() => {
+    fetchLeaveRequests();
+  }, []);
+
+  const fetchLeaveRequests = async () => {
+    try {
+      setIsLoading(true);
+      const { data: leaves, error } = await supabase
+        .from('employee_leaves')
+        .select(`
+          leave_id,
+          employee_id,
+          leave_type,
+          start_date,
+          end_date,
+          reason,
+          status,
+          employees (
+            name
+          )
+        `);
+
+      if (error) throw error;
+
+      const formattedLeaves = leaves.map(leave => ({
+        id: leave.leave_id,
+        employeeName: leave.employees?.name || 'Unknown Employee',
+        leaveType: leave.leave_type,
+        startDate: new Date(leave.start_date).toLocaleDateString(),
+        endDate: new Date(leave.end_date).toLocaleDateString(),
+        status: leave.status || 'pending',
+        description: leave.reason || '',
+        employeeId: leave.employee_id
+      }));
+
+      setLeaveRequests(formattedLeaves);
+    } catch (err) {
+      console.error('Error fetching leave requests:', err);
+      setError('Failed to load leave requests');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleDeleteRequest = (id) => {
-    setLeaveRequests(requests => requests.filter(request => request.id !== id));
+  const handleAction = async (id, action) => {
+    try {
+      setIsUpdating(true);
+      const newStatus = action === 'approve' ? 'approved' : 'rejected';
+      
+      // Update the database
+      const { error: updateError } = await supabase
+        .from('employee_leaves')
+        .update({ status: newStatus })
+        .eq('leave_id', id);
+
+      if (updateError) throw updateError;
+
+      // Verify the update
+      const { data: updatedLeave, error: fetchError } = await supabase
+        .from('employee_leaves')
+        .select(`
+          leave_id,
+          employee_id,
+          leave_type,
+          start_date,
+          end_date,
+          reason,
+          status,
+          employees (
+            name
+          )
+        `)
+        .eq('leave_id', id)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      // Update local state
+      setLeaveRequests(requests =>
+        requests.map(request =>
+          request.id === id
+            ? {
+                id: updatedLeave.leave_id,
+                employeeName: updatedLeave.employees?.name || 'Unknown Employee',
+                leaveType: updatedLeave.leave_type,
+                startDate: new Date(updatedLeave.start_date).toLocaleDateString(),
+                endDate: new Date(updatedLeave.end_date).toLocaleDateString(),
+                status: updatedLeave.status || 'pending',
+                description: updatedLeave.reason || '',
+                employeeId: updatedLeave.employee_id
+              }
+            : request
+        )
+      );
+
+      setSelectedRequest(null);
+      alert(`Leave request ${action}d successfully`);
+      
+    } catch (err) {
+      console.error(`Error ${action}ing leave request:`, err);
+      alert(`Failed to ${action} leave request. Please try again.`);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleDeleteRequest = async (id) => {
+    if (window.confirm('Are you sure you want to delete this leave request?')) {
+      try {
+        const { error } = await supabase
+          .from('employee_leaves')
+          .delete()
+          .eq('leave_id', id);
+
+        if (error) throw error;
+
+        setLeaveRequests(requests => requests.filter(request => request.id !== id));
+      } catch (err) {
+        console.error('Error deleting leave request:', err);
+        alert('Failed to delete leave request');
+      }
+    }
   };
 
   const filteredRequests = leaveRequests.filter(request =>
     statusFilter === "all" ? true : request.status === statusFilter
   );
+
+  if (isLoading) return <div className="loading">Loading...</div>;
+  if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="leave-approval-system">
@@ -45,10 +156,26 @@ export default function LeaveApprovalSystem() {
         <FilterSelect value={statusFilter} onChange={setStatusFilter} />
       </div>
       <div className="leave-cards">
-        <LeaveRequestCard title="Total Requests" count={leaveRequests.length} color="blue" />
-        <LeaveRequestCard title="Approved" count={leaveRequests.filter(r => r.status === 'approved').length} color="green" />
-        <LeaveRequestCard title="Rejected" count={leaveRequests.filter(r => r.status === 'rejected').length} color="red" />
-        <LeaveRequestCard title="Pending" count={leaveRequests.filter(r => r.status === 'pending').length} color="yellow" />
+        <LeaveRequestCard 
+          title="Total Requests" 
+          count={leaveRequests.length} 
+          color="blue" 
+        />
+        <LeaveRequestCard 
+          title="Approved" 
+          count={leaveRequests.filter(r => r.status === 'approved').length} 
+          color="green" 
+        />
+        <LeaveRequestCard 
+          title="Rejected" 
+          count={leaveRequests.filter(r => r.status === 'rejected').length} 
+          color="red" 
+        />
+        <LeaveRequestCard 
+          title="Pending" 
+          count={leaveRequests.filter(r => r.status === 'pending').length} 
+          color="yellow" 
+        />
       </div>
       <LeaveRequestTable 
         requests={filteredRequests} 
@@ -61,6 +188,7 @@ export default function LeaveApprovalSystem() {
           onClose={() => setSelectedRequest(null)}
           onApprove={() => handleAction(selectedRequest.id, 'approve')}
           onReject={() => handleAction(selectedRequest.id, 'reject')}
+          isUpdating={isUpdating}
         />
       )}
     </div>

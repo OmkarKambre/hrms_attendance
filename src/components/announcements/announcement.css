@@ -3,7 +3,7 @@
   --primary-dark: #1b5e20;
   --primary-light: #4caf50;
   --primary-lighter: #e8f5e9;
-  --text-color: #333333;
+  --text-color: #000000;  /* Changed from #333333 to pure black */
   --background-color: #f5f5f5;
   --card-background: #ffffff;
   --error-color: #d32f2f;        /* MUI Red */
@@ -15,35 +15,47 @@
 }
 
 /* Base container styles */
-.announcement-page {
+.announcements-page {
   min-height: 100vh;
+  height: 100%;
   background-color: var(--background-color);
-  padding: 0.5rem;
+  padding: 1rem;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  /* Remove absolute positioning */
+  position: relative;
+  /* Remove top/left/right positioning */
 }
 
-.announcement-container {
+.announcements-wrapper {
   width: 100%;
+  height: 100%;  /* Add this */
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0.5rem;
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.announcement-content {
+.announcements-layout {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  flex: 1;
+  height: 100%;  /* Add this */
 }
 
 /* Header styles */
-.announcement-header {
+.announcements-header {
   padding: 0.75rem;
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
 }
 
-.announcement-title {
+.announcements-header__title {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -51,25 +63,30 @@
 }
 
 /* Card styles */
-.announcement-card {
+.announcements-card {
   background: var(--card-background);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Table styles */
-.announcement-table-container {
+.announcements-table-container {
   margin-top: 1rem;
   overflow-x: auto;
+  flex: 1;
+  min-height: 200px;
+  /* Add these for better scrolling */
+  overflow-y: auto;
+  height: 100%;
 }
 
-.announcement-table {
+.announcements-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.announcement-table th,
-.announcement-table td {
+.announcements-table th,
+.announcements-table td {
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid #eee;
@@ -77,16 +94,16 @@
 
 /* Mobile table styles */
 @media (max-width: 767px) {
-  .announcement-table {
+  .announcements-table {
     border-spacing: 0;
     width: 100%;
   }
 
-  .announcement-table thead {
+  .announcements-table thead {
     display: none;
   }
 
-  .announcement-table tr {
+  .announcements-table tr {
     display: flex;
     flex-direction: column;
     background: var(--card-background);
@@ -95,7 +112,7 @@
     padding: 1rem;
   }
 
-  .announcement-table td {
+  .announcements-table td {
     display: flex;
     flex-direction: row; /* Change to row for side-by-side layout */
     align-items: flex-start;
@@ -104,7 +121,7 @@
     text-align: left;
   }
 
-  .announcement-table td:before {
+  .announcements-table td:before {
     content: attr(data-label);
     font-weight: 600;
     width: 100px; /* Fixed width for labels */
@@ -115,29 +132,29 @@
   }
 
   /* Content styling */
-  .announcement-table td > span {
+  .announcements-table td > span {
     flex: 1; /* Take remaining space */
     padding-left: 0.5rem;
   }
 
   /* Announcement text styling */
-  .announcement-table td[data-label="Announcement"] {
+  .announcements-table td[data-label="Announcement"] {
     white-space: normal;
     line-height: 1.5;
   }
 
   /* Date styling */
-  .announcement-table td[data-label="Date"] {
+  .announcements-table td[data-label="Date"] {
     color: var(--text-color);
   }
 
   /* Recipient styling */
-  .announcement-table td[data-label="Recipient"] {
+  .announcements-table td[data-label="Recipient"] {
     color: var(--text-color);
   }
 
   /* Action button container */
-  .announcement-table td[data-label="Action"] {
+  .announcements-table td[data-label="Action"] {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -147,7 +164,7 @@
     border-top: none;
   }
 
-  .announcement-table td[data-label="Action"]:before {
+  .announcements-table td[data-label="Action"]:before {
     content: attr(data-label);
     font-weight: 600;
     width: 100px;
@@ -158,7 +175,7 @@
   }
 
   /* Delete button styling */
-  .delete-button {
+  .announcements-delete-btn {
     background-color: var(--error-light);
     border-radius: 50%;
     padding: 8px;
@@ -166,7 +183,7 @@
   }
 
   /* Remove conflicting styles */
-  .announcement-table td[data-label="Action"] {
+  .announcements-table td[data-label="Action"] {
     justify-content: space-between;
     padding: 0.75rem 0;
     margin-top: 0;
@@ -174,13 +191,13 @@
   }
 
   /* Override any styles that hide the action label */
-  .announcement-table td[data-label="Action"]:before {
+  .announcements-table td[data-label="Action"]:before {
     display: inline-block !important;
   }
 
   /* Remove any styles that might be hiding or repositioning the action row */
   @media (max-width: 767px) {
-    .announcement-table td[data-label="Action"] {
+    .announcements-table td[data-label="Action"] {
       border-top: none;
       margin-top: 0;
       padding: 0.75rem 0;
@@ -189,33 +206,33 @@
 }
 
 /* Form styles */
-.announcement-form {
+.announcements-form {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.announcement-input {
+.announcements-form__input {
   width: 100% !important;
 }
 
-.recipient-selection {
+.announcements-form__recipients {
   margin: 1rem 0;
 }
 
-.select-container {
+.announcements-form__select {
   width: 100%;
 }
 
 /* Table styles */
-.announcement-table-container {
+.announcements-table-container {
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
 
-.announcement-table {
+.announcements-table {
   min-width: 100%;
 }
 
@@ -228,65 +245,65 @@
 
 /* Responsive adjustments */
 @media (min-width: 480px) {
-  .announcement-page {
+  .announcements-page {
     padding: 1rem;
   }
 
-  .announcement-container {
+  .announcements-wrapper {
     padding: 1rem;
   }
 
-  .announcement-card .MuiCardContent-root {
+  .announcements-card .MuiCardContent-root {
     padding: 1.5rem;
   }
 }
 
 @media (min-width: 768px) {
-  .announcement-page {
+  .announcements-page {
     padding: 1.5rem;
   }
 
-  .announcement-container {
+  .announcements-wrapper {
     padding: 1.5rem;
   }
 
-  .announcement-header {
+  .announcements-header {
     padding: 1rem 1.5rem;
     margin-bottom: 1.5rem;
   }
 
-  .announcement-card .MuiCardContent-root {
+  .announcements-card .MuiCardContent-root {
     padding: 2rem;
   }
 
-  .announcement-form {
+  .announcements-form {
     gap: 1.5rem;
   }
 
-  .send-button {
+  .announcements-submit-btn {
     margin: 1rem 0;
   }
 
-  .announcement-table td {
+  .announcements-table td {
     white-space: normal;
   }
 }
 
 @media (min-width: 1024px) {
-  .announcement-page {
+  .announcements-page {
     padding: 2rem;
   }
 
-  .announcement-container {
+  .announcements-wrapper {
     padding: 2rem;
   }
 
-  .announcement-header {
+  .announcements-header {
     padding: 1.5rem 2rem;
     margin-bottom: 2rem;
   }
 
-  .announcement-content {
+  .announcements-layout {
     gap: 2rem;
   }
 }
@@ -301,7 +318,7 @@
 }
 
 /* Button responsiveness */
-.send-button {
+.announcements-submit-btn {
   width: 100%;
   max-width: 200px;
   margin: 1rem auto;
@@ -309,7 +326,7 @@
   color: white !important;
 }
 
-.send-button:hover {
+.announcements-submit-btn:hover {
   background-color: var(--primary-dark) !important;
 }
 
@@ -328,11 +345,11 @@
 }
 
 /* Typography Responsiveness */
-.announcement-title {
+.announcements-header__title {
   font-size: clamp(1.5rem, 5vw, 2.5rem) !important;
 }
 
-.card-title {
+.announcements-card__title {
   font-size: clamp(1.25rem, 4vw, 1.5rem) !important;
   color: var(--primary-color);
 }
@@ -357,7 +374,7 @@
 @media (max-width: 767px) {
   /* ... existing mobile table styles ... */
 
-  .announcement-table td:last-child {
+  .announcements-table td:last-child {
     border-bottom: none;
     text-align: right;
     padding-left: 8px;
@@ -365,45 +382,45 @@
   }
 
   /* Add these new styles */
-  .announcement-table td[data-label="Action"] {
+  .announcements-table td[data-label="Action"] {
     padding-left: 8px;
     justify-content: flex-end;
   }
 
-  .announcement-table td[data-label="Action"]:before {
+  .announcements-table td[data-label="Action"]:before {
     display: none; /* Hide the label for action column */
   }
 
-  .delete-button {
+  .announcements-delete-btn {
     padding: 8px;
   }
 }
 
 /* Add these new styles for better button handling */
-.delete-button {
+.announcements-delete-btn {
   color: var(--error-color) !important;
   min-width: 40px !important;
   min-height: 40px !important;
 }
 
-.delete-button:hover {
+.announcements-delete-btn:hover {
   background-color: var(--error-light) !important;
 }
 
 /* Improve table cell content alignment */
-.announcement-table td {
+.announcements-table td {
   vertical-align: middle;
 }
 
 @media (max-width: 767px) {
-  .announcement-table td {
+  .announcements-table td {
     align-items: center;
     min-height: 48px;
   }
 }
 
 /* Update header icon color */
-.announcement-icon {
+.announcements-icon {
   color: var(--primary-color) !important;
 }
 
@@ -445,19 +462,19 @@
 }
 
 /* Card title colors */
-.card-title {
+.announcements-card__title {
   color: var(--primary-color);
 }
 
 /* Table header colors */
-.announcement-table th {
+.announcements-table th {
   background-color: var(--primary-lighter);
   color: var(--primary-dark);
 }
 
 /* Mobile view styles update */
 @media (max-width: 767px) {
-  .announcement-table tr {
+  .announcements-table tr {
     border: 1px solid var(--primary-lighter);
   }
 }
@@ -465,13 +482,13 @@
 /* Mobile-specific styles */
 @media (max-width: 767px) {
   /* Card spacing and padding */
-  .announcement-card {
+  .announcements-card {
     margin-bottom: 1rem;
     padding: 0.5rem;
   }
 
   /* Table styles for mobile */
-  .announcement-table tr {
+  .announcements-table tr {
     display: flex;
     flex-direction: column;
     background: #fff;
@@ -481,7 +498,7 @@
     padding: 1rem;
   }
 
-  .announcement-table td {
+  .announcements-table td {
     display: flex;
     padding: 0.75rem 0;
     border-bottom: 1px solid var(--primary-lighter);
@@ -489,7 +506,7 @@
     padding-left: 0;
   }
 
-  .announcement-table td:before {
+  .announcements-table td:before {
     content: attr(data-label);
     font-weight: 600;
     width: 120px;
@@ -498,34 +515,34 @@
     padding-right: 1rem;
   }
 
-  .announcement-table td:last-child {
+  .announcements-table td:last-child {
     border-bottom: none;
   }
 
   /* Action button container */
-  .announcement-table td[data-label="Action"] {
+  .announcements-table td[data-label="Action"] {
     justify-content: flex-end;
     padding: 0.5rem 0 0 0;
     margin-top: 0.5rem;
     border-top: 1px solid var(--primary-lighter);
   }
 
-  .announcement-table td[data-label="Action"]:before {
+  .announcements-table td[data-label="Action"]:before {
     display: none;
   }
 
   /* Announcement text styling */
-  .announcement-table td[data-label="Announcement"] {
+  .announcements-table td[data-label="Announcement"] {
     align-items: flex-start;
   }
 
   /* Date styling */
-  .announcement-table td[data-label="Date"] {
+  .announcements-table td[data-label="Date"] {
     color: var(--text-color);
   }
 
   /* Delete button styling */
-  .delete-button {
+  .announcements-delete-btn {
     background-color: var(--error-light);
     border-radius: 50%;
     padding: 8px;
@@ -533,36 +550,36 @@
   }
 
   /* Form responsiveness */
-  .announcement-form {
+  .announcements-form {
     gap: 1rem;
   }
 
-  .announcement-input {
+  .announcements-form__input {
     margin-bottom: 1rem;
   }
 
   /* Header responsiveness */
-  .announcement-header {
+  .announcements-header {
     padding: 1rem 0;
   }
 
-  .announcement-title {
+  .announcements-header__title {
     font-size: 1.5rem !important;
   }
 
   /* Card title responsiveness */
-  .card-title {
+  .announcements-card__title {
     font-size: 1.25rem !important;
     margin-bottom: 1rem;
   }
 
   /* Select container spacing */
-  .select-container {
+  .announcements-form__select {
     margin-bottom: 1rem;
   }
 
   /* Send button positioning */
-  .send-button {
+  .announcements-submit-btn {
     width: 100%;
     margin: 1rem 0;
   }
@@ -570,17 +587,68 @@
 
 /* Additional mobile optimizations */
 @media (max-width: 480px) {
-  .announcement-container {
+  .announcements-wrapper {
     padding: 0.5rem;
   }
 
-  .announcement-card {
+  .announcements-card {
     border-radius: 4px;
   }
 
-  .announcement-table td:before {
+  .announcements-table td:before {
     width: 100px;
     min-width: 100px;
   }
 }
 
+/* Add or update these color-specific rules */
+.announcements-table td {
+  color: #000000;  /* Ensure table cell text is black */
+}
+
+.announcements-table td[data-label="Date"],
+.announcements-table td[data-label="Announcement"],
+.announcements-table td[data-label="Recipient"] {
+  color: #000000;  /* Ensure specific table cells are black */
+}
+
+/* Update the mobile view text colors */
+@media (max-width: 767px) {
+  .announcements-table td:before {
+    color: var(--primary-color);  /* Keep the labels in primary color */
+  }
+
+  .announcements-table td {
+    color: #000000;  /* Ensure the content is black */
+  }
+}
+
+/* Ensure form text is black */
+.MuiInputBase-input {
+  color: #000000 !important;
+}
+
+/* Ensure Typography components are black */
+.MuiTypography-root {
+  color: #000000;
+}
+
+/* Keep specific elements in their original colors */
+.announcements-header__title {
+  color: var(--primary-color) !important;  /* Keep header in primary color */
+}
+
+.announcements-icon {
+  color: var(--primary-color) !important;  /* Keep icon in primary color */
+}
+
+/* Update responsive styles */
+@media (max-width: 767px) {
+  .announcements-page {
+    padding: 0.5rem;
+  }
+  
+  .announcements-wrapper {
+    padding: 0.5rem;
+  }
+}

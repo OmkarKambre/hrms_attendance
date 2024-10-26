@@ -421,3 +421,27 @@
 .rbc-calendar {
   width: 100% !important;
 }
+
+/* Update the leave-item styles */
+.leave-item strong {
+  color: #000000;  /* Makes the name black */
+  display: block;
+  margin-bottom: 4px;
+}
+
+.leave-reason {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: #000000;  /* Makes the reason black */
+}
+
+/* Keep the leave type styling as is */
+.leave-type {
+  display: inline-block;
+  background-color: var(--primary-green);
+  color: var(--white);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  margin-top: 4px;
+}

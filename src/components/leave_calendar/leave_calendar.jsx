@@ -80,16 +80,20 @@ const LeaveModal = ({ event, onClose }) => {
   return (
     <div className="leave-modal-overlay" onClick={onClose}>
       <div className="leave-modal" onClick={e => e.stopPropagation()}>
-        <h3>{event.title}</h3>
+        <h3>Leave Details</h3>
         <p><strong>Date:</strong> {moment(event.start).format('MMMM D, YYYY')}</p>
-        <p><strong>Employees on Leave:</strong> {event.employeesOnLeave}</p>
-        <ul>
+        <p><strong>Total Employees on Leave:</strong> {event.employeesOnLeave}</p>
+        <div className="leave-list">
           {event.employees.map((emp, index) => (
-            <li key={index}>
-              <strong>{emp.name}</strong> - {emp.reason}
-            </li>
+            <div key={index} className="leave-item">
+              <strong>{emp.name}</strong>
+              <div className="leave-details">
+                <span className="leave-type">{emp.leaveType}</span>
+                <p className="leave-reason">{emp.reason}</p>
+              </div>
+            </div>
           ))}
-        </ul>
+        </div>
         <button onClick={onClose}>Close</button>
       </div>
     </div>
@@ -99,7 +103,7 @@ const LeaveModal = ({ event, onClose }) => {
 const CustomEvent = ({ event }) => (
   <div 
     className={`custom-event ${event.employeesOnLeave > 3 ? 'high-leave-count' : ''}`}
-    data-tooltip={`${event.employeesOnLeave} on leave`}
+    data-tooltip={`${event.employeesOnLeave} ${event.employeesOnLeave === 1 ? 'employee' : 'employees'} on leave`}
   >
     <span className="event-count">{event.employeesOnLeave}</span>
   </div>
@@ -108,61 +112,90 @@ const CustomEvent = ({ event }) => (
 const LeaveCalendar = () => {
   const [leaveData, setLeaveData] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchLeaveData = async () => {
-      const { data, error } = await supabase
-        .from('employee_leaves')
-        .select('employee_id, leave_type, start_date, end_date, reason');
+      try {
+        setIsLoading(true);
+        const { data: leaves, error: leavesError } = await supabase
+          .from('employee_leaves')
+          .select(`
+            leave_id,
+            employee_id,
+            leave_type,
+            start_date,
+            end_date,
+            reason,
+            employees (
+              name
+            )
+          `);
 
-      if (error) {
-        console.error('Error fetching leave data:', error);
-        return;
+        if (leavesError) throw leavesError;
+
+        setLeaveData(leaves.map(leave => ({
+          leaveId: leave.leave_id,
+          employeeId: leave.employee_id,
+          employeeName: leave.employees?.name || 'Unknown Employee',
+          leaveType: leave.leave_type,
+          start: new Date(leave.start_date),
+          end: new Date(leave.end_date),
+          reason: leave.reason || leave.leave_type
+        })));
+      } catch (err) {
+        console.error('Error fetching leave data:', err);
+        setError('Failed to load leave data');
+      } finally {
+        setIsLoading(false);
       }
-
-      setLeaveData(data.map(leave => ({
-        employee: leave.employee_id,
-        reason: leave.reason || leave.leave_type,
-        start: leave.start_date,
-        end: leave.end_date
-      })));
     };
 
     fetchLeaveData();
   }, []);
 
   const events = useCallback(() => {
-    const eventMap = {};
+    const eventMap = new Map();
     
     leaveData.forEach(leave => {
-      const start = new Date(leave.start);
-      const end = new Date(leave.end);
-      const duration = (end - start) / (1000 * 60 * 60 * 24) + 1;
-
-      for (let i = 0; i < duration; i++) {
-        const date = new Date(start);
-        date.setDate(start.getDate() + i);
-        const dateString = date.toISOString().split('T')[0];
-
-        if (!eventMap[dateString]) {
-          eventMap[dateString] = {
-            start: date,
-            end: date,
+      const currentDate = new Date(leave.start);
+      const endDate = new Date(leave.end);
+      
+      while (currentDate <= endDate) {
+        const dateKey = currentDate.toISOString().split('T')[0];
+        
+        if (!eventMap.has(dateKey)) {
+          eventMap.set(dateKey, {
+            start: new Date(currentDate),
+            end: new Date(currentDate),
             title: "Employees on Leave",
             employeesOnLeave: 0,
             employees: []
-          };
+          });
         }
-        eventMap[dateString].employeesOnLeave++;
-        eventMap[dateString].employees.push({ name: leave.employee, reason: leave.reason });
+        
+        const event = eventMap.get(dateKey);
+        event.employeesOnLeave++;
+        event.employees.push({
+          name: leave.employeeName,
+          reason: leave.reason,
+          leaveType: leave.leaveType
+        });
+        
+        currentDate.setDate(currentDate.getDate() + 1);
       }
     });
-    return Object.values(eventMap);
+    
+    return Array.from(eventMap.values());
   }, [leaveData]);
 
   const handleSelectEvent = (event) => {
     setSelectedEvent(event);
   };
+
+  if (isLoading) return <div className="loading">Loading calendar...</div>;
+  if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="leave-calendar-container">
@@ -180,7 +213,6 @@ const LeaveCalendar = () => {
         views={[Views.MONTH]}
         defaultView={Views.MONTH}
         onSelectEvent={handleSelectEvent}
-        defaultDate={new Date(2024, 8, 1)}
       />
       {selectedEvent && (
         <LeaveModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />

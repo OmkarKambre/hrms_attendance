@@ -57,8 +57,8 @@ const LeaveRequestTable = ({ requests, onSelectRequest, onDeleteRequest }) => {
   );
 };
 
-// LeaveRequestModal component
-const LeaveRequestModal = ({ request, onClose, onApprove, onReject }) => {
+// Update the LeaveRequestModal component
+const LeaveRequestModal = ({ request, onClose, onApprove, onReject, isUpdating }) => {
   return (
     <div className="leave-request-modal">
       <div className="modal-content">
@@ -91,8 +91,20 @@ const LeaveRequestModal = ({ request, onClose, onApprove, onReject }) => {
           </div>
         </div>
         <div className="modal-footer">
-          <button className="button approve" onClick={onApprove}>Approve</button>
-          <button className="button reject" onClick={onReject}>Reject</button>
+          <button 
+            className="button approve" 
+            onClick={onApprove}
+            disabled={isUpdating}
+          >
+            {isUpdating ? 'Processing...' : 'Approve'}
+          </button>
+          <button 
+            className="button reject" 
+            onClick={onReject}
+            disabled={isUpdating}
+          >
+            {isUpdating ? 'Processing...' : 'Reject'}
+          </button>
         </div>
       </div>
     </div>

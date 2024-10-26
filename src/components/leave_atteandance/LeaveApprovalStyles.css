@@ -102,12 +102,14 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 500;
   font-size: 1.2rem;
   margin-bottom: 10px;
+  color: #000000; /* Changed to black */
 }
 .leave-request-card p {
   font-family: 'Open Sans', sans-serif;
   font-size: 2rem;
   font-weight: 600;
   margin: 0;
+  color: #000000; /* Changed to black */
 }
 
 /* Badge styles */
@@ -194,7 +196,7 @@ h1, h2, h3, h4, h5, h6 {
 .info-value {
   font-family: 'Open Sans', sans-serif;
   font-size: 1rem;
-  color: #212529;
+  color: #000000; /* Changed to black */
   flex: 1;
 }
 .description-row {
@@ -214,20 +216,20 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 0.95rem;
   margin: 0;
   line-height: 1.5;
-  color: #333;
+  color: #000000; /* Changed to black */
   white-space: pre-wrap;
   word-break: break-word;
 }
 .status-pending {
-  color: #e6d97e; /* Black text for pending status in modal */
+  color: #000000; /* Changed to black */
   font-weight: bold;
 }
 .status-approved {
-  color:  #218838;
+  color: #000000; /* Changed to black */
   font-weight: bold;
 }
 .status-rejected {
-  color: #dc3545;
+  color: #000000; /* Changed to black */
   font-weight: bold;
 }
 .modal-footer {
@@ -339,4 +341,35 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #fff;
   color: #333;
   padding: 10px;
+}
+
+/* Add these button states */
+.button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Optional: Add a loading spinner */
+.button.loading {
+  position: relative;
+  color: transparent;
+}
+
+.button.loading::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
