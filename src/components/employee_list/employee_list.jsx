@@ -7,6 +7,10 @@ function EmployeeList() {
     const [employees, setEmployees] = useState([]);
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [filteredEmployees, setFilteredEmployees] = useState([]);
+    const [selectedEmployee, setSelectedEmployee] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedEmployee, setEditedEmployee] = useState(null);
 
     useEffect(() => {
         const fetchEmployees = async () => {
@@ -44,13 +48,65 @@ function EmployeeList() {
     };
 
     const handleViewDetails = (employee) => {
-        alert(`Details for ${employee.name}:\nRole: ${employee.position}\nContact: ${employee.email}`);
+        setSelectedEmployee(employee);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedEmployee(null);
     };
 
     const getInitials = (name) => {
         const nameParts = name.split(' ');
         const initials = nameParts.map(part => part[0]).join('');
         return initials.toUpperCase();
+    };
+
+    const handleEditClick = () => {
+        setIsEditing(true);
+        setEditedEmployee({ ...selectedEmployee });
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setEditedEmployee(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleSave = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('employees')
+                .update({
+                    name: editedEmployee.name,
+                    email: editedEmployee.email,
+                    pno: editedEmployee.pno,
+                    dept: editedEmployee.dept,
+                    position: editedEmployee.position,
+                    leave_count: editedEmployee.leave_count
+                })
+                .eq('employee_id', editedEmployee.employee_id)
+                .select();
+
+            if (error) throw error;
+
+            // Update local state
+            setEmployees(employees.map(emp => 
+                emp.employee_id === editedEmployee.employee_id ? data[0] : emp
+            ));
+            setFilteredEmployees(filteredEmployees.map(emp => 
+                emp.employee_id === editedEmployee.employee_id ? data[0] : emp
+            ));
+            setSelectedEmployee(data[0]);
+            setIsEditing(false);
+            alert('Employee details updated successfully!');
+        } catch (error) {
+            console.error('Error updating employee:', error);
+            alert('Error updating employee details. Please try again.');
+        }
     };
 
     return (
@@ -99,6 +155,109 @@ function EmployeeList() {
                     </div>
                 </div>
             ))}
+            {/* Modal */}
+            {isModalOpen && selectedEmployee && (
+                <div className="modal-overlay" onClick={closeModal}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <div className="modal-initials">
+                                {getInitials(selectedEmployee.name)}
+                            </div>
+                            <div className="modal-actions">
+                                {!isEditing && (
+                                    <button className="edit-button" onClick={handleEditClick}>
+                                        Edit
+                                    </button>
+                                )}
+                                <button className="modal-close" onClick={closeModal}>&times;</button>
+                            </div>
+                        </div>
+                        <div className="modal-body">
+                            <h2>{selectedEmployee.name}</h2>
+                            <div className="modal-info-grid">
+                                {isEditing ? (
+                                    // Edit mode
+                                    <>
+                                        <div className="edit-field">
+                                            <label><strong>Name:</strong></label>
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                value={editedEmployee.name}
+                                                onChange={handleInputChange}
+                                            />
+                                        </div>
+                                        <div className="edit-field">
+                                            <label><strong>Email:</strong></label>
+                                            <input
+                                                type="email"
+                                                name="email"
+                                                value={editedEmployee.email}
+                                                onChange={handleInputChange}
+                                            />
+                                        </div>
+                                        <div className="edit-field">
+                                            <label><strong>Phone:</strong></label>
+                                            <input
+                                                type="text"
+                                                name="pno"
+                                                value={editedEmployee.pno || ''}
+                                                onChange={handleInputChange}
+                                            />
+                                        </div>
+                                        <div className="edit-field">
+                                            <label><strong>Department:</strong></label>
+                                            <input
+                                                type="text"
+                                                name="dept"
+                                                value={editedEmployee.dept || ''}
+                                                onChange={handleInputChange}
+                                            />
+                                        </div>
+                                        <div className="edit-field">
+                                            <label><strong>Position:</strong></label>
+                                            <input
+                                                type="text"
+                                                name="position"
+                                                value={editedEmployee.position || ''}
+                                                onChange={handleInputChange}
+                                            />
+                                        </div>
+                                        <div className="edit-field">
+                                            <label><strong>Leave Balance:</strong></label>
+                                            <input
+                                                type="number"
+                                                name="leave_count"
+                                                value={editedEmployee.leave_count || 0}
+                                                onChange={handleInputChange}
+                                            />
+                                        </div>
+                                        <div className="edit-actions">
+                                            <button className="save-button" onClick={handleSave}>
+                                                Save Changes
+                                            </button>
+                                            <button className="cancel-button" onClick={() => setIsEditing(false)}>
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </>
+                                ) : (
+                                    // View mode
+                                    <>
+                                        <p><strong>Employee ID:</strong> {selectedEmployee.employee_id}</p>
+                                        <p><strong>Email:</strong> {selectedEmployee.email}</p>
+                                        <p><strong>Phone:</strong> {selectedEmployee.pno || 'Not provided'}</p>
+                                        <p><strong>Department:</strong> {selectedEmployee.dept || 'Not assigned'}</p>
+                                        <p><strong>Position:</strong> {selectedEmployee.position || 'Not assigned'}</p>
+                                        <p><strong>Leave Balance:</strong> {selectedEmployee.leave_count || 0} days</p>
+                                        <p><strong>Joined:</strong> {new Date(selectedEmployee.created_at).toLocaleDateString()}</p>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

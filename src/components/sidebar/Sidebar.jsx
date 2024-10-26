@@ -98,12 +98,6 @@ const Sidebar = ({ onLogout, isMobile, isOpen, toggleSidebar }) => {
             path="/manage/employees"
           >
             <NestedMenuItem
-              primary="Manage Employees"
-              onClick={() => navigate('/manage/employees/manage')}
-              path="/manage/employees/manage"
-              depth={2}
-            />
-            <NestedMenuItem
               primary="Employee List"
               onClick={() => navigate('/manage/employees/list')}
               path="/manage/employees/list"
