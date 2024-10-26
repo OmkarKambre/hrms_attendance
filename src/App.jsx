@@ -19,7 +19,11 @@ import EmployeeAnnouncement from './components/em_announcements/EmployeeAnnounce
 import './App.css';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    const user = localStorage.getItem('user');
+    const employee = localStorage.getItem('employee');
+    return !!(user || employee); // Returns true if either exists
+  });
   const [leaveData, setLeaveData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -35,6 +39,16 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const user = localStorage.getItem('user');
+    const employee = localStorage.getItem('employee');
+    if (user || employee) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, []);
+
+  useEffect(() => {
     const fetchData = async () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       setIsLoading(false);
@@ -43,18 +57,20 @@ function App() {
     fetchData();
   }, []);
 
-  const handleLogin = (status) => {
+  const handleLogin = (status, userType = 'admin') => {
     setIsAuthenticated(status);
     if (status) {
-      localStorage.setItem('user', 'authenticated');
+      localStorage.setItem('user', userType);
     } else {
       localStorage.removeItem('user');
+      localStorage.removeItem('employee');
     }
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem('user');
+    localStorage.removeItem('employee');
   };
 
   const handleLeaveDataChange = (newLeaveData) => {

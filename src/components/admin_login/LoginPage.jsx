@@ -28,22 +28,19 @@ const LoginPage = ({ onLogin }) => {
       try {
         const { data, error } = await supabase
           .from('employees')
-          .select('employee_id, name, email, password, pno, dept, position, created_at, leave_count') // Include leave_count
+          .select('employee_id, name, email, password, pno, dept, position, created_at, leave_count')
           .eq('email', email)
           .eq('password', password)
           .single();
 
         if (error || !data) {
-          console.log('Invalid credentials for Employee login.');
           setError('Invalid credentials for Employee login.');
         } else {
-          console.log('Employee login successful');
-          localStorage.setItem('employee', JSON.stringify(data)); // Store employee data in local storage
-          onLogin(true, data.name);
-          navigate('/MarkAttendance'); // Redirect to Mark Attendance page
+          localStorage.setItem('employee', JSON.stringify(data));
+          onLogin(true, 'employee');
+          navigate('/MarkAttendance');
         }
       } catch (err) {
-        console.error('Unexpected error:', err);
         setError('Unexpected error occurred.');
       }
     } else if (userType === 'admin') {
@@ -54,15 +51,13 @@ const LoginPage = ({ onLogin }) => {
         });
 
         if (error) {
-          console.error('Supabase error:', error.message);
           setError('Invalid credentials for Admin login.');
         } else {
-          console.log('Admin login successful');
-          onLogin(true);
-          navigate('/dashboard'); // Redirect to Dashboard page for admin
+          localStorage.setItem('user', 'admin');
+          onLogin(true, 'admin');
+          navigate('/dashboard');
         }
       } catch (err) {
-        console.error('Unexpected error:', err);
         setError('Unexpected error occurred.');
       }
     }
