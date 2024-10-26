@@ -5,6 +5,7 @@ body {
   font-family: 'Open Sans', sans-serif;
   color: #333;
   line-height: 1.6;
+  background-color: #f5f5f5; /* Light grey background */
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -24,6 +25,7 @@ h1, h2, h3, h4, h5, h6 {
   border: 2px solid #28a745; /* Green border around the entire table */
   border-radius: 8px;
   overflow: hidden;
+  background-color: white; /* White background for table */
 }
 .leave-request-table th, .leave-request-table td {
   padding: 12px 15px;
@@ -268,6 +270,8 @@ h1, h2, h3, h4, h5, h6 {
 /* LeaveApprovalSystem styles */
 .leave-approval-system {
   padding: 20px;
+  background-color: #f5f5f5; /* Light grey background */
+  min-height: 100vh; /* Ensure full height coverage */
 }
 .header {
   display: flex;

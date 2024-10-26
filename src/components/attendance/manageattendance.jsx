@@ -146,6 +146,23 @@ export default function AttendanceDashboard() {
     );
   };
 
+  // Add these helper functions
+  const getAttendanceSummary = (employees, attendance) => {
+    const totalEmployees = employees.length;
+    const totalCheckedIn = attendance.length; // Total number of check-ins
+    const late = attendance.filter(a => {
+      const checkInTime = new Date(`2000-01-01 ${a.attendance_time}`);
+      const expectedTime = new Date(`2000-01-01 09:00:00`);
+      return checkInTime > expectedTime;
+    }).length;
+
+    return {
+      totalEmployees,
+      totalCheckedIn,
+      late
+    };
+  };
+
   return (
     <Container maxWidth={false} className="attendance-dashboard">
       <header className="attendance-dashboard__header">
@@ -173,9 +190,10 @@ export default function AttendanceDashboard() {
                 <CardHeader
                   title="Total Employees"
                   avatar={<NotificationsOutlined />}
+                  style={{ backgroundColor: 'var(--primary-color)', color: 'white' }}
                 />
                 <CardContent>
-                  <Typography variant="h4">{employees.length}</Typography>
+                  <Typography variant="h4" align="center">{employees.length}</Typography>
                 </CardContent>
               </Card>
             </Grid>
@@ -184,10 +202,11 @@ export default function AttendanceDashboard() {
                 <CardHeader
                   title="Checked In"
                   avatar={<CheckCircleOutline />}
+                  style={{ backgroundColor: 'var(--primary-color)', color: 'white' }}
                 />
                 <CardContent>
-                  <Typography variant="h4">
-                    {employees.filter(emp => emp.status === 'Checked In').length}
+                  <Typography variant="h4" align="center">
+                    {attendance.length} {/* Total number of check-ins */}
                   </Typography>
                 </CardContent>
               </Card>
@@ -195,12 +214,17 @@ export default function AttendanceDashboard() {
             <Grid item xs={12} md={4}>
               <Card>
                 <CardHeader
-                  title="Missed Check-in/Absent"
-                  avatar={<CancelOutlined />}
+                  title="Late"
+                  avatar={<WarningAmberOutlined />}
+                  style={{ backgroundColor: 'var(--primary-color)', color: 'white' }}
                 />
                 <CardContent>
-                  <Typography variant="h4">
-                    {employees.filter(emp => ['Missed Check-in', 'Absent'].includes(emp.status)).length}
+                  <Typography variant="h4" align="center">
+                    {attendance.filter(a => {
+                      const checkInTime = new Date(`2000-01-01 ${a.attendance_time}`);
+                      const expectedTime = new Date(`2000-01-01 09:00:00`);
+                      return checkInTime > expectedTime;
+                    }).length}
                   </Typography>
                 </CardContent>
               </Card>
