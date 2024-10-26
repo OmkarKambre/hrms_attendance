@@ -11,6 +11,16 @@ function EmployeeList() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [editedEmployee, setEditedEmployee] = useState(null);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [newEmployee, setNewEmployee] = useState({
+        name: '',
+        email: '',
+        password: '',
+        pno: '',
+        dept: '',
+        position: '',
+        leave_count: 0
+    });
 
     useEffect(() => {
         const fetchEmployees = async () => {
@@ -109,6 +119,35 @@ function EmployeeList() {
         }
     };
 
+    const handleAddEmployee = async () => {
+        try {
+            const { data, error } = await supabase
+                .from('employees')
+                .insert([newEmployee])
+                .select();
+
+            if (error) throw error;
+
+            // Update local state
+            setEmployees([...employees, data[0]]);
+            setFilteredEmployees([...filteredEmployees, data[0]]);
+            setIsAddModalOpen(false);
+            setNewEmployee({
+                name: '',
+                email: '',
+                password: '',
+                pno: '',
+                dept: '',
+                position: '',
+                leave_count: 0
+            });
+            alert('Employee added successfully!');
+        } catch (error) {
+            console.error('Error adding employee:', error);
+            alert('Error adding employee. Please try again.');
+        }
+    };
+
     return (
         <div className="employee-list-container">
             <div className="header">
@@ -139,6 +178,9 @@ function EmployeeList() {
                         }}
                     />
                 </div>
+                <button className="add-button" onClick={() => setIsAddModalOpen(true)}>
+                    Add Employee
+                </button>
             </div>
             {filteredEmployees.map((employee) => (
                 <div className="employee-item" key={employee.employee_id}>
@@ -253,6 +295,90 @@ function EmployeeList() {
                                         <p><strong>Joined:</strong> {new Date(selectedEmployee.created_at).toLocaleDateString()}</p>
                                     </>
                                 )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {/* Add Employee Modal */}
+            {isAddModalOpen && (
+                <div className="modal-overlay" onClick={() => setIsAddModalOpen(false)}>
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <div className="modal-initials">
+                                {newEmployee.name ? getInitials(newEmployee.name) : 'NEW'}
+                            </div>
+                            <div className="modal-actions">
+                                <button className="modal-close" onClick={() => setIsAddModalOpen(false)}>&times;</button>
+                            </div>
+                        </div>
+                        <div className="modal-body">
+                            <h2>Add New Employee</h2>
+                            <div className="modal-info-grid">
+                                <div className="edit-field">
+                                    <label><strong>Name:</strong></label>
+                                    <input
+                                        type="text"
+                                        value={newEmployee.name}
+                                        onChange={e => setNewEmployee({...newEmployee, name: e.target.value})}
+                                    />
+                                </div>
+                                <div className="edit-field">
+                                    <label><strong>Email:</strong></label>
+                                    <input
+                                        type="email"
+                                        value={newEmployee.email}
+                                        onChange={e => setNewEmployee({...newEmployee, email: e.target.value})}
+                                    />
+                                </div>
+                                <div className="edit-field">
+                                    <label><strong>Password:</strong></label>
+                                    <input
+                                        type="password"
+                                        value={newEmployee.password}
+                                        onChange={e => setNewEmployee({...newEmployee, password: e.target.value})}
+                                    />
+                                </div>
+                                <div className="edit-field">
+                                    <label><strong>Phone:</strong></label>
+                                    <input
+                                        type="text"
+                                        value={newEmployee.pno}
+                                        onChange={e => setNewEmployee({...newEmployee, pno: e.target.value})}
+                                    />
+                                </div>
+                                <div className="edit-field">
+                                    <label><strong>Department:</strong></label>
+                                    <input
+                                        type="text"
+                                        value={newEmployee.dept}
+                                        onChange={e => setNewEmployee({...newEmployee, dept: e.target.value})}
+                                    />
+                                </div>
+                                <div className="edit-field">
+                                    <label><strong>Position:</strong></label>
+                                    <input
+                                        type="text"
+                                        value={newEmployee.position}
+                                        onChange={e => setNewEmployee({...newEmployee, position: e.target.value})}
+                                    />
+                                </div>
+                                <div className="edit-field">
+                                    <label><strong>Leave Balance:</strong></label>
+                                    <input
+                                        type="number"
+                                        value={newEmployee.leave_count}
+                                        onChange={e => setNewEmployee({...newEmployee, leave_count: parseInt(e.target.value) || 0})}
+                                    />
+                                </div>
+                                <div className="edit-actions">
+                                    <button className="save-button" onClick={handleAddEmployee}>
+                                        Add Employee
+                                    </button>
+                                    <button className="cancel-button" onClick={() => setIsAddModalOpen(false)}>
+                                        Cancel
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

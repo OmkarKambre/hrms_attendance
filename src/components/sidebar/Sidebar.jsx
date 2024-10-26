@@ -32,7 +32,7 @@ const NestedMenuItem = ({ icon, primary, children, onClick, depth = 0, path }) =
     <>
       <ListItem 
         onClick={handleClick} 
-        style={{ paddingLeft: 24 * (depth + 1) }} 
+        style={{ paddingLeft: depth === 0 ? 16 : 24 * (depth + 1) }}
         className={`menu-item ${isActive ? 'active' : ''}`}
       >
         {icon && <ListItemIcon>{icon}</ListItemIcon>}

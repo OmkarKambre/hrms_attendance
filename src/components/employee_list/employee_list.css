@@ -34,17 +34,16 @@ body {
 
 /* Search container styles */
 .search-container {
-    display: flex; /* Use flexbox */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    margin-bottom: 20px; /* Space below the search input */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 20px;
 }
 
-/* Search input container styles */
 .search-input-container {
-    position: relative; /* Position relative for absolute positioning of the icon */
-    max-width: 300px; /* Set a smaller maximum width for the search input */
-    width: 100%; /* Full width of the container */
+    flex: 1;
+    max-width: 500px;
 }
 
 /* Search input styles */
@@ -455,4 +454,25 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+/* Add button styles */
+.add-button {
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-button:hover {
+    background-color: #388e3c;
+    transform: scale(1.05);
 }

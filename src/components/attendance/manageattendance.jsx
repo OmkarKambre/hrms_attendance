@@ -14,36 +14,16 @@ import {
 import { format } from 'date-fns'
 import './manageattendance.css'
 import ReactSelect from 'react-select'
+import { supabase } from '../../supabaseClient'
 
 const GRACE_PERIOD_MINUTES = 15
 
-// Mock data with status
-const mockEmployees = [
-  { id: 1, name: "John Doe", expectedCheckIn: "09:00", actualCheckIn: null, status: "Absent" },
-  { id: 2, name: "Jane Smith", expectedCheckIn: "08:30", actualCheckIn: "08:25", status: "Checked In" },
-  { id: 3, name: "Alice Johnson", expectedCheckIn: "09:30", actualCheckIn: null, status: "Missed Check-in" },
-  { id: 4, name: "Bob Brown", expectedCheckIn: "08:45", actualCheckIn: "08:50", status: "Checked In" },
-  { id: 5, name: "Eve Wilson", expectedCheckIn: "09:15", actualCheckIn: null, status: "Absent" },
-]
-
-const mockAdjustments = [
-  { id: 1, employee: "John Doe", date: "2023-05-15", oldStatus: "Absent", newStatus: "Checked In", reason: "Forgot to check in", adjustedBy: "Admin", adjustedAt: "2023-05-15 10:30 AM" },
-  { id: 2, employee: "Jane Smith", date: "2023-05-14", oldStatus: "Checked Out", newStatus: "Checked In", reason: "System error", adjustedBy: "Admin", adjustedAt: "2023-05-14 05:45 PM" },
-]
-
-// Static data for alerts
-const mockAlerts = [
-  { id: 1, employee: "Alice Johnson", message: "Missed check-in", time: "09:45 AM" },
-  { id: 2, employee: "Eve Wilson", message: "Absent without notice", time: "09:30 AM" },
-  { id: 3, employee: "John Doe", message: "Late check-in", time: "09:10 AM" },
-]
-
 export default function AttendanceDashboard() {
-  const [employees, setEmployees] = useState(mockEmployees)
-  const [adjustments, setAdjustments] = useState(mockAdjustments)
-  const [currentTime, setCurrentTime] = useState(new Date())
-  const [alerts, setAlerts] = useState(mockAlerts)
-  const [selectedDate, setSelectedDate] = useState(new Date())
+  const [employees, setEmployees] = useState([]);
+  const [attendance, setAttendance] = useState([]);
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isLoading, setIsLoading] = useState(true);
   const [editingEmployee, setEditingEmployee] = useState(null)
   const [newAdjustment, setNewAdjustment] = useState({
     employee: '',
@@ -55,20 +35,62 @@ export default function AttendanceDashboard() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedEmployees, setSelectedEmployees] = useState([])
 
-  // ... (keep the useEffect hooks as they are) ...
+  useEffect(() => {
+    fetchData();
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, [selectedDate]);
+
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      // Fetch employees
+      const { data: employeesData, error: employeesError } = await supabase
+        .from('employees')
+        .select('*');
+      if (employeesError) throw employeesError;
+
+      // Fetch attendance for selected date
+      const { data: attendanceData, error: attendanceError } = await supabase
+        .from('employee_attendance')
+        .select('*')
+        .eq('attendance_date', format(selectedDate, 'yyyy-MM-dd'));
+      if (attendanceError) throw attendanceError;
+
+      setEmployees(employeesData);
+      setAttendance(attendanceData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const getEmployeeStatus = (employeeId) => {
+    const todayAttendance = attendance.find(a => a.employee_id === employeeId);
+    if (!todayAttendance) return 'Absent';
+
+    const checkInTime = new Date(`2000-01-01 ${todayAttendance.attendance_time}`);
+    const expectedTime = new Date(`2000-01-01 09:00:00`);
+    
+    if (checkInTime > expectedTime) {
+      return 'Late';
+    }
+    return 'Present';
+  };
 
   const getStatusChip = (status) => {
     switch (status) {
-      case 'Checked In':
-        return <Chip label={status} style={{ backgroundColor: 'var(--primary-color)', color: 'white' }} />
-      case 'Missed Check-in':
-        return <Chip label={status} color="warning" />
+      case 'Present':
+        return <Chip label={status} style={{ backgroundColor: 'var(--primary-color)', color: 'white' }} />;
+      case 'Late':
+        return <Chip label={status} style={{ backgroundColor: '#ff9800', color: 'white' }} />;
       case 'Absent':
-        return <Chip label={status} color="error" />
+        return <Chip label={status} style={{ backgroundColor: '#f44336', color: 'white' }} />;
       default:
-        return <Chip label={status} />
+        return <Chip label={status} />;
     }
-  }
+  };
 
   const handleEditClick = (employee) => {
     setEditingEmployee(employee)
@@ -208,7 +230,7 @@ export default function AttendanceDashboard() {
             <Table>
               <TableHead>
                 <TableRow>
-                  {['Name', 'Expected Check-in', 'Actual Check-in', 'Status', 'Action'].map((header) => (
+                  {['Name', 'Department', 'Expected Check-in', 'Actual Check-in', 'Status', 'Action'].map((header) => (
                     <TableCell
                       key={header}
                       style={{
@@ -223,19 +245,27 @@ export default function AttendanceDashboard() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {getFilteredEmployees().map((employee) => (
-                  <TableRow key={employee.id}>
-                    <TableCell>{employee.name}</TableCell>
-                    <TableCell>{employee.expectedCheckIn}</TableCell>
-                    <TableCell>{employee.actualCheckIn || '-'}</TableCell>
-                    <TableCell>{getStatusChip(employee.status)}</TableCell>
-                    <TableCell>
-                      <IconButton onClick={() => handleEditClick(employee)} size="small">
-                        <EditOutlined />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {employees.map((employee) => {
+                  const employeeAttendance = attendance.find(a => a.employee_id === employee.employee_id);
+                  const status = getEmployeeStatus(employee.employee_id);
+                  
+                  return (
+                    <TableRow key={employee.employee_id}>
+                      <TableCell>{employee.name}</TableCell>
+                      <TableCell>{employee.dept || '-'}</TableCell>
+                      <TableCell>09:00</TableCell>
+                      <TableCell>
+                        {employeeAttendance ? format(new Date(`2000-01-01 ${employeeAttendance.attendance_time}`), 'HH:mm') : '-'}
+                      </TableCell>
+                      <TableCell>{getStatusChip(status)}</TableCell>
+                      <TableCell>
+                        <IconButton onClick={() => handleEditClick(employee)} size="small">
+                          <EditOutlined />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </Paper>
@@ -246,16 +276,7 @@ export default function AttendanceDashboard() {
                 <CardHeader title="Alerts" />
                 <CardContent>
                   <Box sx={{ maxHeight: 200, overflowY: 'auto' }}>
-                    {alerts.map((alert) => (
-                      <Box key={alert.id} display="flex" alignItems="center" mb={2}>
-                        <WarningAmberOutlined color="warning" sx={{ mr: 1 }} />
-                        <Box>
-                          <Typography variant="subtitle2">{alert.employee}</Typography>
-                          <Typography variant="body2" color="textSecondary">{alert.message}</Typography>
-                          <Typography variant="body2" color="textSecondary">{alert.time}</Typography>
-                        </Box>
-                      </Box>
-                    ))}
+                    {/* Alerts content here */}
                   </Box>
                 </CardContent>
               </Card>
@@ -265,18 +286,7 @@ export default function AttendanceDashboard() {
                 <CardHeader title="Adjustment History" />
                 <CardContent>
                   <Box sx={{ maxHeight: 200, overflowY: 'auto' }}>
-                    {adjustments.map((adjustment) => (
-                      <Box key={adjustment.id} mb={2} pb={1} borderBottom={1} borderColor="divider">
-                        <Typography variant="subtitle2">{adjustment.employee}</Typography>
-                        <Typography variant="body2" color="textSecondary">
-                          {adjustment.oldStatus} → {adjustment.newStatus}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary">{adjustment.reason}</Typography>
-                        <Typography variant="body2" color="textSecondary">
-                          Adjusted by {adjustment.adjustedBy} at {adjustment.adjustedAt}
-                        </Typography>
-                      </Box>
-                    ))}
+                    {/* Adjustments content here */}
                   </Box>
                 </CardContent>
               </Card>
