@@ -65,18 +65,13 @@
 }
 
 .attendance-dashboard__summary .MuiCard-root,
-.attendance-dashboard__alerts,
-.attendance-dashboard__adjustments,
 .attendance-dashboard__edit-dialog .MuiDialog-paper {
   background-color: var(--card-background);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
 }
 
 .attendance-dashboard__summary .MuiCardHeader-root,
-.attendance-dashboard__alerts .MuiCardHeader-root,
-.attendance-dashboard__adjustments .MuiCardHeader-root,
 .attendance-dashboard__edit-dialog-title {
   background-color: var(--primary-color);
   border-top-left-radius: 8px;
@@ -85,21 +80,15 @@
 }
 
 .attendance-dashboard__summary .MuiCardHeader-title,
-.attendance-dashboard__alerts .MuiCardHeader-title,
-.attendance-dashboard__adjustments .MuiCardHeader-title,
 .attendance-dashboard__edit-dialog-title {
   color: white !important;
 }
 
-.attendance-dashboard__summary .MuiCardHeader-avatar,
-.attendance-dashboard__alerts .MuiCardHeader-avatar,
-.attendance-dashboard__adjustments .MuiCardHeader-avatar {
+.attendance-dashboard__summary .MuiCardHeader-avatar {
   color: white;
 }
 
 .attendance-dashboard__summary .MuiCardContent-root,
-.attendance-dashboard__alerts .MuiCardContent-root,
-.attendance-dashboard__adjustments .MuiCardContent-root,
 .attendance-dashboard__edit-dialog-content {
   padding: 24px;
 }
@@ -177,15 +166,6 @@
 .attendance-dashboard__sidebar {
   flex: 1 1 300px;
   max-width: 100%;
-}
-
-.attendance-dashboard__alerts,
-.attendance-dashboard__adjustments {
-  height: 100%;
-  margin-bottom: 24px;
-  background-color: var(--card-background);
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .attendance-dashboard__edit-dialog .MuiDialog-paper {
@@ -310,13 +290,6 @@
   }
 }
 
-@media (max-width: 960px) {
-  .attendance-dashboard__alerts,
-  .attendance-dashboard__adjustments {
-    margin-bottom: 2rem;
-  }
-}
-
 .attendance-dashboard__employee-table .MuiTableHead-root {
   background-color: var(--primary-color);
 }
@@ -328,10 +301,12 @@
 
 .employee-select {
   width: 300px;
+  color: black;
 }
 
 @media (max-width: 768px) {
   .employee-select {
     width: 100%;
+    color: black;
   }
 }

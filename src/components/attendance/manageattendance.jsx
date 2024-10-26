@@ -270,28 +270,7 @@ export default function AttendanceDashboard() {
             </Table>
           </Paper>
          
-          <Grid container spacing={2} mt={2}>
-            <Grid item xs={12} md={6}>
-              <Card className="attendance-dashboard__alerts">
-                <CardHeader title="Alerts" />
-                <CardContent>
-                  <Box sx={{ maxHeight: 200, overflowY: 'auto' }}>
-                    {/* Alerts content here */}
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <Card className="attendance-dashboard__adjustments">
-                <CardHeader title="Adjustment History" />
-                <CardContent>
-                  <Box sx={{ maxHeight: 200, overflowY: 'auto' }}>
-                    {/* Adjustments content here */}
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          </Grid>
+          
         </Grid>
       </Grid>
 
