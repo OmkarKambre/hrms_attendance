@@ -78,6 +78,7 @@ const LeaveHistory = ({ onLogout }) => {
                 <th>Start Date</th>
                 <th>End Date</th>
                 <th>Reason</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
@@ -87,6 +88,7 @@ const LeaveHistory = ({ onLogout }) => {
                   <td>{leave.start_date}</td>
                   <td>{leave.end_date}</td>
                   <td>{leave.reason}</td>
+                  <td>{leave.status || 'Pending'}</td>
                 </tr>
               ))}
             </tbody>
