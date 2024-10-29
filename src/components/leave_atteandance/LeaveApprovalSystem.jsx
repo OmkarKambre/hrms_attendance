@@ -67,7 +67,27 @@ export default function LeaveApprovalSystem() {
       setIsUpdating(true);
       const newStatus = action === 'approve' ? 'approved' : 'rejected';
       
-      // Update the database
+      // Get the leave request details before updating
+      const { data: leaveRequest, error: initialFetchError } = await supabase
+        .from('employee_leaves')
+        .select(`
+          leave_id,
+          employee_id,
+          start_date,
+          end_date,
+          status
+        `)
+        .eq('leave_id', id)
+        .single();
+
+      if (initialFetchError) throw initialFetchError;
+
+      // Calculate the number of days
+      const startDate = new Date(leaveRequest.start_date);
+      const endDate = new Date(leaveRequest.end_date);
+      const daysDiff = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+
+      // Update the leave request status
       const { error: updateError } = await supabase
         .from('employee_leaves')
         .update({ status: newStatus })
@@ -75,8 +95,27 @@ export default function LeaveApprovalSystem() {
 
       if (updateError) throw updateError;
 
-      // Verify the update
-      const { data: updatedLeave, error: fetchError } = await supabase
+      // If the action is 'reject', restore the leave count
+      if (action === 'reject') {
+        const { data: employee, error: employeeError } = await supabase
+          .from('employees')
+          .select('leave_count')
+          .eq('employee_id', leaveRequest.employee_id)
+          .single();
+
+        if (employeeError) throw employeeError;
+
+        // Update employee's leave count by adding back the days
+        const { error: updateEmployeeError } = await supabase
+          .from('employees')
+          .update({ leave_count: employee.leave_count + daysDiff })
+          .eq('employee_id', leaveRequest.employee_id);
+
+        if (updateEmployeeError) throw updateEmployeeError;
+      }
+
+      // Verify and update local state
+      const { data: updatedLeave, error: verificationError } = await supabase
         .from('employee_leaves')
         .select(`
           leave_id,
@@ -93,7 +132,7 @@ export default function LeaveApprovalSystem() {
         .eq('leave_id', id)
         .single();
 
-      if (fetchError) throw fetchError;
+      if (verificationError) throw verificationError;
 
       // Update local state
       setLeaveRequests(requests =>

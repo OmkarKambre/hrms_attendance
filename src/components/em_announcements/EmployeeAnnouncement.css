@@ -65,20 +65,31 @@
 @media (max-width: 768px) {
   .announcement-container {
     width: 90%;
-    margin: 110px auto 20px 20px;
+    margin: 80px auto 20px auto;
     padding: 15px;
+    position: relative;
+    z-index: 1;  /* Ensure content stays above other elements */
+    overflow: visible;
   }
 
   .announcement-item {
     padding: 12px;
+    display: block;  /* Ensure items are displayed */
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .announcement-text {
+    display: block;
+    width: 100%;
+    word-break: break-word;
   }
 }
 
 @media (max-width: 480px) {
   .announcement-container {
-    width: 95%;
-    margin: 110px auto 20px 10px;
-    padding: 12px;
+    margin-top: 70px;  /* Reduced top margin for smaller screens */
+    min-height: 200px;  /* Ensure minimum height for content */
   }
 
   .announcement-item {
