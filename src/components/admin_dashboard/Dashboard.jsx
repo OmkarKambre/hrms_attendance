@@ -386,7 +386,9 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <Typography variant="h4" className="dashboard-title">Attendance Dashboard</Typography>
+      <Typography variant="h4" className="dashboard-title" style={{ color: 'black' }}>
+        Attendance Dashboard
+      </Typography>
       
       {/* Top 4 Cards */}
       <div className="grid-container">

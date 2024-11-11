@@ -17,6 +17,8 @@ html, body {
   justify-content: center;
   height: 100vh;
   width: 100vw;
+  padding: 20px;
+  margin-left: 200px;
   background-color: black; /* Light grey background */
   color: #333; /* Dark text color */
 }
@@ -46,7 +48,8 @@ html, body {
   width: 90%; /* Use percentage for responsive width */
   max-width: 900px;
   height: auto;
-  padding: 20px; /* Reduced padding for smaller screens */
+  padding: 20px;
+  margin-top: 120px;/* Reduced padding for smaller screens */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -167,6 +170,8 @@ html, body {
   .mark-attendance-container {
     width: 95%; /* Further adjust width */
     padding: 10px;
+    margin-left: 0; /* Remove margin-left for mobile view */
+    margin-top: 120px; /* Add margin-top to avoid overlap with navbar */
   }
 
   .time-display {

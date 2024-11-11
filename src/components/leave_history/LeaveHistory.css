@@ -1,5 +1,5 @@
 .leave-history-page {
-    padding: 0;
+    padding: 20px;
     color: #e0e0e0;
     min-height: 100vh;
     display: flex;
@@ -18,7 +18,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    overflow-x: hidden; /* Prevent horizontal overflow */
+    overflow-x: hidden;
 }
 
 h2 {
@@ -29,10 +29,10 @@ h2 {
 
 .search-filters {
     display: flex;
-    flex-wrap: wrap; /* Allow wrapping for smaller screens */
+    flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 20px;
-    width: 100%; /* Ensure it takes full width */
+    width: 100%;
 }
 
 .search-bar {
@@ -43,14 +43,14 @@ h2 {
     font-size: 1rem;
     background-color: #333;
     color: #e0e0e0;
-    min-width: 0; /* Allow flex items to shrink */
+    min-width: 0;
 }
 
 .leave-history-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    overflow-x: auto; /* Allow horizontal scrolling on small screens */
+    overflow-x: auto;
 }
 
 .leave-history-table th,
@@ -58,12 +58,12 @@ h2 {
     border: 1px solid #444;
     padding: 12px;
     text-align: left;
-    color: #ffffff; /* Added white color for table text */
+    color: #ffffff;
 }
 
 .leave-history-table th {
     background-color: #333;
-    color: #bb86fc; /* Keep header color as purple */
+    color: #bb86fc;
     font-weight: bold;
 }
 
@@ -75,16 +75,21 @@ h2 {
     background-color: #444;
 }
 
-/* Add styles for status colors if needed */
 .leave-history-table td:last-child {
     font-weight: 500;
     text-transform: capitalize;
 }
 
 @media (max-width: 768px) {
+    .leave-history-page {
+        margin-left: 0;
+        padding: 10px;
+        margin-top: 100px;
+    }
+
     .leave-history-container {
         padding: 20px;
-        margin: 200px auto 15px; /* Add top margin and reduce bottom margin */
+        margin: 20px auto;
     }
 
     .search-bar {
@@ -99,9 +104,13 @@ h2 {
 }
 
 @media (max-width: 480px) {
+    .leave-history-page {
+        padding: 10px;
+        margin-top: 100px;
+    }
+
     .leave-history-container {
         padding: 15px;
-        margin: 130px auto 20px; /* Add top margin and reduce bottom margin */
     }
 
     .search-bar {

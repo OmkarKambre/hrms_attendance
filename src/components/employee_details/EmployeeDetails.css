@@ -19,14 +19,14 @@ body, html {
     width: calc(100% - 10px); /* Adjust width to account for negative margin */
     max-width: 900px; /* Limit the maximum width */
     height: auto; /* Auto height to fit content */
-    padding: 40px; /* Standard padding */
+    padding: 40px;
+    margin-top: 120px; /* Standard padding */
     display: flex;
     flex-direction: column;
     align-items: center;
     background: #1e1e1e; /* Darker background for the card */
     border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); /* Deeper shadow for card effect */
-    margin: 65px auto 10px -5px; /* Keep the specified margin */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); /* Deeper shadow for card effect */ /* Keep the specified margin */
     overflow: hidden; /* Ensure content doesn't overflow */
 }
 
@@ -125,6 +125,44 @@ body, html {
     .app .employee-details-container .info-item {
         flex-direction: column; /* Stack items vertically on smaller screens */
         align-items: flex-start; /* Align items to the start */
+    }
+}
+
+/* Media query for screens 400px and below */
+@media (max-width: 480px) {
+    .app .employee-details-container {
+        padding: 15px; /* Further reduce padding for very small screens */
+        margin-top: 130px; /* Adjust margins for very small screens */
+    }
+
+    .app .employee-details-container .employee-title {
+        font-size: 1.5rem; /* Further reduce title size */
+    }
+
+    .app .employee-details-container .employee-subtitle {
+        font-size: 1.2rem; /* Further reduce subtitle size */
+    }
+
+    .app .employee-details-container .info-item {
+        padding: 10px; /* Reduce padding for info items */
+    }
+
+    .app .employee-details-container .info-label {
+        font-size: 0.9rem; /* Smaller font size for labels */
+    }
+
+    .app .employee-details-container .info-value {
+        font-size: 0.9rem; /* Smaller font size for values */
+    }
+
+    .app .employee-details-container .footer {
+        font-size: 0.9rem; /* Smaller font size for footer */
+    }
+
+    .app .employee-details-container .profile-initials {
+        width: 120px; /* Smaller size for initials */
+        height: 120px; /* Smaller size for initials */
+        font-size: 2.5rem; /* Smaller font size for initials */
     }
 }
 

@@ -1,5 +1,5 @@
 .attendance-history-page-emp {
-    padding: 0;
+    padding: 20px;
     color: #e0e0e0;
     min-height: 100vh;
     display: flex;
@@ -76,9 +76,15 @@ h2 {
 }
 
 @media (max-width: 768px) {
+    .attendance-history-page-emp {
+        padding: 10px; /* Adjust padding for mobile view */
+        margin-left: 0; /* Remove margin-left for mobile view */
+        margin-top: 100px; /* Add margin-top to avoid overlap with navbar */
+    }
+
     .attendance-history-container {
         padding: 20px;
-        margin: 200px auto 15px; /* Add top margin and reduce bottom margin */
+        margin: 20px auto; /* Adjust margin for mobile view */
     }
 
     .search-bar {
@@ -93,9 +99,15 @@ h2 {
 }
 
 @media (max-width: 480px) {
+    .attendance-history-page-emp {
+        padding: 10px; /* Further adjust padding for smaller screens */
+        margin-top: 100px; /* Ensure consistent margin-top for smaller screens */
+        margin-left: 0;
+    }
+
     .attendance-history-container {
         padding: 15px;
-        margin: 130px auto 20px; /* Add top margin and reduce bottom margin */
+        margin: 20px auto; /* Adjust margin for mobile view */
     }
 
     .search-bar {

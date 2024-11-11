@@ -13,6 +13,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { useNavigate, useLocation } from 'react-router-dom';
 import companyLogo from './company-logo.png';
 import './Sidebar.css';
+import { useState } from 'react';
 
 const NestedMenuItem = ({ icon, primary, children, onClick, depth = 0, path }) => {
   const [open, setOpen] = React.useState(false);
@@ -59,12 +60,17 @@ const NestedMenuItem = ({ icon, primary, children, onClick, depth = 0, path }) =
 };
 
 const Sidebar = ({ onLogout, isMobile, isOpen, toggleSidebar }) => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleLogout = () => {
     onLogout();
     navigate('/');
+  };
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   const sidebarContent = (
@@ -119,7 +125,6 @@ const Sidebar = ({ onLogout, isMobile, isOpen, toggleSidebar }) => {
           <NestedMenuItem
             icon={<EventNoteIcon />}
             primary="Leaves"
-            onClick={() => navigate('/manage/leaves')}
             path="/manage/leaves"
           >
             <NestedMenuItem
@@ -147,21 +152,19 @@ const Sidebar = ({ onLogout, isMobile, isOpen, toggleSidebar }) => {
   return (
     <>
       {isMobile && (
-        <IconButton
+        <button 
           className="mobile-menu-button"
-          color="inherit"
-          aria-label="open drawer"
-          onClick={toggleSidebar}
-          edge="start"
+          onClick={toggleMobileMenu}
+          aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
         >
           <MenuIcon />
-        </IconButton>
+        </button>
       )}
       <Drawer
         variant={isMobile ? "temporary" : "permanent"}
         anchor="left"
-        open={isMobile ? isOpen : true}
-        onClose={isMobile ? toggleSidebar : undefined}
+        open={isMobile ? isMobileMenuOpen : true}
+        onClose={isMobile ? toggleMobileMenu : undefined}
         classes={{
           paper: 'sidebar',
         }}

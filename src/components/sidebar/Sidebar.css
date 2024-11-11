@@ -44,14 +44,49 @@
 
 .mobile-menu-button {
   position: fixed;
-  top: 10px; /* Ensure this is set to position the button at the top */
-  left: 10px; /* Ensure this is set to position the button on the left */
+  top: 10px; /* Position the button at the top */
+  left: 10px; /* Position the button on the left */
   z-index: 1400;
   background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 0 0 4px 0;
-  padding: 12px;
+  border-radius: 4px; /* Rounded corners for the button */
+  padding: 8px; /* Reduced padding for a smaller button */
   margin: 0;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border: none; /* Remove default button border */
+  cursor: pointer; /* Change cursor to pointer */
+  font-size: 16px; /* Adjust font size if necessary */
+  width: 40px; /* Set a specific width */
+  height: 40px; /* Set a specific height */
+}
+
+.nxtgen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: none; /* Hidden by default */
+  z-index: 1300; /* Below the button but above other content */
+}
+
+.nxtgen-overlay.show {
+  display: block; /* Show overlay when sidebar is open */
+}
+
+.nxtgen-sidebar {
+  position: fixed;
+  top: 0;
+  left: -280px; /* Hide sidebar off-screen */
+  width: 280px; /* Width of the sidebar */
+  height: 100vh;
+  background-color: white; /* Background color of the sidebar */
+  transition: left 0.3s ease; /* Smooth transition for opening */
+  z-index: 1200; /* Below the overlay */
+}
+
+.nxtgen-sidebar.open {
+  left: 0; /* Slide in the sidebar */
 }
 
 @media (max-width: 768px) {
@@ -64,6 +99,6 @@
 @media (max-width: 480px) {
   .sidebar,
   .sidebar .MuiDrawer-paper {
-    width: 200px;
+    width: 220px;
   }
 }
